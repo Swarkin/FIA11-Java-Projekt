@@ -1,10 +1,19 @@
+use crate::model::Wunschliste;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::io;
-use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
 
-#[derive(Default, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct State {
-	pub count: u32,
+	pub id: AtomicU64,
+	pub listen: HashMap<u64, Wunschliste>,
+}
+
+impl State {
+	pub fn next_id(&self) -> u64 {
+		self.id.fetch_add(1, Ordering::SeqCst)
+	}
 }
 
 pub fn load_state() -> io::Result<State> {

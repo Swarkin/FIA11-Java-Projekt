@@ -1,8 +1,9 @@
 mod state;
 mod routes;
+mod model;
 
 use axum::http::StatusCode;
-use axum::routing::get;
+use axum::routing::{delete, get, post};
 use axum::Router;
 use std::sync::Arc;
 use std::time::Duration;
@@ -21,14 +22,18 @@ async fn main() {
 	let app = Router::new()
 		.layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
 		.route("/", get(|| async { "Hello, world!" }))
-		.route("/counter", get(routes::counter))
+		.route("/wunschliste", get(routes::get_wunschliste))
+		.route("/wunschliste", get(routes::get_wunschliste_count))
+		.route("/wunschliste", post(routes::create_wunschliste))
+		.route("/wunschliste", delete(routes::remove_wunschliste))
 		.with_state(state.clone());
 
 	let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
 	axum::serve(listener, app)
 		.with_graceful_shutdown(shutdown_signal()).await.unwrap();
 
-	state::save_state(state.write().await.clone())
+	let _ = state.write().await;
+	state::save_state(Arc::try_unwrap(state).unwrap().into_inner())
 		.unwrap();
 }
 
