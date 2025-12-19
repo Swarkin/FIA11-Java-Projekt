@@ -24,10 +24,10 @@ async fn main() {
 		.route("/", get(|| async { "Hello, world!" }))
 		.route("/wunschliste", get(routes::get_wunschliste))
 		.route("/wunschliste/batch", get(routes::get_wunschliste_batch))
-		// .route("/wunschliste/count", get(routes::get_wunschliste_count))
 		.route("/wunschliste", post(routes::create_wunschliste))
 		.route("/wunschliste", delete(routes::remove_wunschliste))
 		.route("/wunschliste/eintrag", put(routes::crate_wunschliste_eintrag))
+		.route("/wunschliste/eintrag", delete(routes::remove_wunschliste_eintrag))
 		.with_state(state.clone());
 
 	let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
@@ -36,7 +36,7 @@ async fn main() {
 
 	let _ = state.write().await;
 	state::save_state(Arc::try_unwrap(state).unwrap().into_inner())
-		.unwrap();
+		.expect("failed to save state");
 }
 
 async fn shutdown_signal() {

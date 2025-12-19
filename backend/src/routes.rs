@@ -1,8 +1,9 @@
+use crate::model::{Id, Item, Wunschliste};
 use crate::AppState;
-use axum::extract::{State, Json, Query};
+use axum::extract::{Json, Query, State};
 use axum::http::StatusCode;
-use serde::Deserialize;
-use crate::model::{Item, Wunschliste};
+use serde::{Deserialize, Serialize};
+
 
 #[derive(Deserialize)]
 pub struct GetWunschliste {
@@ -12,10 +13,11 @@ pub struct GetWunschliste {
 pub async fn get_wunschliste(State(state): State<AppState>, Query(query): Query<GetWunschliste>) -> Result<Json<Wunschliste>, StatusCode> {
 	let app_state = state.read().await;
 
-	app_state.listen.get(&query.id)
+	app_state.db.lists.get(&query.id)
 		.ok_or(StatusCode::NOT_FOUND)
 		.map(|x| Json(x.to_owned()))
 }
+
 
 #[derive(Deserialize)]
 pub struct GetWunschlisteBatch {
@@ -33,7 +35,7 @@ pub async fn get_wunschliste_batch(State(state): State<AppState>, Json(data): Js
 	let app_state = state.read().await;
 
 	for id in data.ids {
-		match app_state.listen.get(&id) {
+		match app_state.db.lists.get(&id) {
 			None => return Err(StatusCode::NOT_FOUND),
 			Some(liste) => wunschlisten.push(liste.to_owned()),
 		}
@@ -42,43 +44,53 @@ pub async fn get_wunschliste_batch(State(state): State<AppState>, Json(data): Js
 	Ok(Json(wunschlisten))
 }
 
-// #[derive(Deserialize)]
-// pub struct GetWunschlisteCount {
-// 	pub n: u8,
-// }
-//
-// pub async fn get_wunschliste_count(State(state): State<AppState>, Query(query): Query<GetWunschlisteCount>) -> Result<Json<Vec<Wunschliste>>, StatusCode> {
-// 	if query.n == 0 { return Err(StatusCode::BAD_REQUEST); }
-//
-// 	let app_state = state.read().await;
-// 	let mut wunschlisten = Vec::with_capacity(query.n as usize);
-//
-// 	for i in 0..query.n {
-// 		match app_state.listen.get(&i.into()) {
-// 			None => return Err(StatusCode::BAD_REQUEST),
-// 			Some(liste) => wunschlisten.push(liste.to_owned()),
-// 		}
-// 	}
-//
-// 	Ok(Json(wunschlisten))
-// }
 
-pub async fn create_wunschliste(State(state): State<AppState>, Json(wunschliste): Json<Wunschliste>) -> String {
-	let mut app_state = state.write().await;
-
-	let id = app_state.next_id();
-	app_state.listen.insert(id, wunschliste);
-
-	id.to_string()
+#[derive(Deserialize)]
+pub struct CreateWunschliste {
+	pub name: String,
+	pub description: String,
+	pub items: Vec<Item>,
 }
 
-pub async fn remove_wunschliste(State(state): State<AppState>, Json(id): Json<u64>) -> Result<(), StatusCode> {
+#[derive(Serialize)]
+pub struct CreateWunschlisteResponse {
+	pub id: Id,
+	pub liste: Wunschliste,
+}
+
+pub async fn create_wunschliste(
+	State(state): State<AppState>,
+	Json(data): Json<CreateWunschliste>
+) -> Json<CreateWunschlisteResponse> {
 	let mut app_state = state.write().await;
 
-	app_state.listen.remove(&id)
+	let wunschliste = Wunschliste::new(
+		data.name,
+		data.description,
+		data.items.into_iter().map(|x| (app_state.next_entry_id(), x)).collect(),
+	);
+
+	let next_id = app_state.next_list_id();
+	app_state.db.lists.insert(next_id, wunschliste.clone());
+
+	Json(CreateWunschlisteResponse {
+		id: next_id,
+		liste: wunschliste,
+	})
+}
+
+
+pub async fn remove_wunschliste(
+	State(state): State<AppState>,
+	Json(id): Json<Id>
+) -> Result<(), StatusCode> {
+	let mut app_state = state.write().await;
+
+	app_state.db.lists.remove(&id)
 		.ok_or(StatusCode::BAD_REQUEST)
 		.map(|_| ())
 }
+
 
 #[derive(Deserialize)]
 pub struct CreateWunschlisteEintrag {
@@ -86,13 +98,38 @@ pub struct CreateWunschlisteEintrag {
 	pub eintrag: Item,
 }
 
-pub async fn crate_wunschliste_eintrag(State(state): State<AppState>, Json(eintrag): Json<CreateWunschlisteEintrag>) -> Result<(), StatusCode> {
+pub async fn crate_wunschliste_eintrag(
+	State(state): State<AppState>,
+	Json(eintrag): Json<CreateWunschlisteEintrag>
+) -> Result<(), StatusCode> {
 	let mut app_state = state.write().await;
 
-	let liste = app_state.listen.get_mut(&eintrag.wunschliste_id)
+	let next_id = app_state.next_entry_id();
+	let liste = app_state.db.lists.get_mut(&eintrag.wunschliste_id)
 		.ok_or(StatusCode::NOT_FOUND)?;
 
-	liste.items.push(eintrag.eintrag);
+	liste.items.insert(next_id, eintrag.eintrag);
 
 	Ok(())
+}
+
+
+#[derive(Deserialize)]
+pub struct RemoveWunschlisteEintrag {
+	pub wunschliste_id: u64,
+	pub eintrag_id: Id,
+}
+
+pub async fn remove_wunschliste_eintrag(
+	State(state): State<AppState>,
+	Json(data): Json<RemoveWunschlisteEintrag>
+) -> Result<(), StatusCode> {
+	let mut app_state = state.write().await;
+
+	let liste = app_state.db.lists.get_mut(&data.wunschliste_id)
+		.ok_or(StatusCode::NOT_FOUND)?;
+
+	liste.items.remove(&data.eintrag_id)
+		.ok_or(StatusCode::BAD_REQUEST)
+		.map(|_| ())
 }
