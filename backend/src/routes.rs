@@ -80,14 +80,49 @@ pub async fn create_wunschliste(
 }
 
 
+#[derive(Deserialize)]
+pub struct PatchWunschliste {
+	pub id: u64,
+	pub name: Option<String>,
+	pub description: Option<String>,
+}
+
+pub async fn patch_wunschliste(
+	State(state): State<AppState>,
+	Json(data): Json<PatchWunschliste>
+) -> Result<(), StatusCode> {
+	if data.name.is_none() && data.description.is_none() {
+		return Err(StatusCode::BAD_REQUEST);
+	}
+
+	let mut app_state = state.write().await;
+
+	app_state.db.lists.get_mut(&data.id)
+		.ok_or(StatusCode::NOT_FOUND)
+		.map(|x| {
+			if let Some(name) = data.name {
+				x.name = name;
+			}
+			if let Some(description) = data.description {
+				x.description = description;
+			}
+		})
+}
+
+
+#[derive(Deserialize)]
+pub struct RemoveWunschliste {
+	pub id: u64,
+}
+
 pub async fn remove_wunschliste(
 	State(state): State<AppState>,
-	Json(id): Json<Id>
+	Json(data): Json<RemoveWunschliste>
 ) -> Result<(), StatusCode> {
 	let mut app_state = state.write().await;
 
-	app_state.db.lists.remove(&id)
-		.ok_or(StatusCode::BAD_REQUEST)
+	app_state.db.lists.remove(&data.id)
+		.ok_or(StatusCode::NOT_FOUND)
 		.map(|_| ())
 }
 
@@ -130,6 +165,6 @@ pub async fn remove_wunschliste_eintrag(
 		.ok_or(StatusCode::NOT_FOUND)?;
 
 	liste.items.remove(&data.eintrag_id)
-		.ok_or(StatusCode::BAD_REQUEST)
+		.ok_or(StatusCode::NOT_FOUND)
 		.map(|_| ())
 }

@@ -3,7 +3,7 @@ mod routes;
 mod model;
 
 use axum::http::StatusCode;
-use axum::routing::{delete, get, post, put};
+use axum::routing::{delete, get, patch, post, put};
 use axum::Router;
 use std::sync::Arc;
 use std::time::Duration;
@@ -31,6 +31,7 @@ async fn main() {
 		.route("/wunschliste", get(routes::get_wunschliste))
 		.route("/wunschliste/batch", get(routes::get_wunschliste_batch))
 		.route("/wunschliste", post(routes::create_wunschliste))
+		.route("/wunschliste", patch(routes::patch_wunschliste))
 		.route("/wunschliste", delete(routes::remove_wunschliste))
 		.route("/wunschliste/eintrag", put(routes::crate_wunschliste_eintrag))
 		.route("/wunschliste/eintrag", delete(routes::remove_wunschliste_eintrag))
