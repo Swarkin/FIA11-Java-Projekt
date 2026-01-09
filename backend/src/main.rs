@@ -9,18 +9,24 @@ use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 use tower_http::timeout::TimeoutLayer;
+use tower_http::trace::TraceLayer;
+use tracing::level_filters::LevelFilter;
 
 pub type AppState = Arc<RwLock<state::State>>;
 
 #[tokio::main]
 async fn main() {
-	let state = state::load_state()
-		.expect("failed to load state");
+	tracing_subscriber::fmt::fmt()
+		.with_max_level(LevelFilter::TRACE)
+		.without_time()
+		.init();
 
-	let state = Arc::new(RwLock::new(state));
+	let state = Arc::new(RwLock::new(
+		state::load_state()
+			.expect("failed to load state")
+	));
 
 	let app = Router::new()
-		.layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
 		.route("/", get(|| async { "Hello, world!" }))
 		.route("/wunschliste", get(routes::get_wunschliste))
 		.route("/wunschliste/batch", get(routes::get_wunschliste_batch))
@@ -28,6 +34,8 @@ async fn main() {
 		.route("/wunschliste", delete(routes::remove_wunschliste))
 		.route("/wunschliste/eintrag", put(routes::crate_wunschliste_eintrag))
 		.route("/wunschliste/eintrag", delete(routes::remove_wunschliste_eintrag))
+		.layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
+		.layer(TraceLayer::new_for_http())
 		.with_state(state.clone());
 
 	let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
@@ -53,7 +61,7 @@ async fn shutdown_signal() {
 	let terminate = std::future::pending::<()>();
 
 	tokio::select! {
-        _ = ctrl_c => {},
-        _ = terminate => {},
-    }
+		_ = ctrl_c => {},
+		_ = terminate => {},
+	}
 }
