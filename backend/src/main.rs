@@ -33,7 +33,7 @@ async fn main() {
 		.route("/wunschliste", post(routes::create_wunschliste))
 		.route("/wunschliste", patch(routes::patch_wunschliste))
 		.route("/wunschliste", delete(routes::remove_wunschliste))
-		.route("/wunschliste/eintrag", put(routes::crate_wunschliste_eintrag))
+		.route("/wunschliste/eintrag", put(routes::create_wunschliste_eintrag))
 		.route("/wunschliste/eintrag", delete(routes::remove_wunschliste_eintrag))
 		.layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
 		.layer(TraceLayer::new_for_http())

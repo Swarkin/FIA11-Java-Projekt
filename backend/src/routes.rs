@@ -133,10 +133,15 @@ pub struct CreateWunschlisteEintrag {
 	pub eintrag: Item,
 }
 
-pub async fn crate_wunschliste_eintrag(
+#[derive(Serialize)]
+pub struct CreateWunschlisteEintragResponse {
+	pub id: Id,
+}
+
+pub async fn create_wunschliste_eintrag(
 	State(state): State<AppState>,
 	Json(eintrag): Json<CreateWunschlisteEintrag>
-) -> Result<(), StatusCode> {
+) -> Result<Json<CreateWunschlisteEintragResponse>, StatusCode> {
 	let mut app_state = state.write().await;
 
 	let next_id = app_state.next_entry_id();
@@ -145,7 +150,7 @@ pub async fn crate_wunschliste_eintrag(
 
 	liste.items.insert(next_id, eintrag.eintrag);
 
-	Ok(())
+	Ok(Json(CreateWunschlisteEintragResponse { id: next_id }))
 }
 
 
