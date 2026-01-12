@@ -1,12 +1,15 @@
 package frontend;
 
-public class wunschliste
+import java.util.HashMap;
+
+public class Wunschliste
 {
 	private int id;
     private String name;
     private String description;
+    private HashMap<Integer, WunschlisteEintrag> items;
 
-    public wunschliste(int id, String name, String description) 
+    public Wunschliste(int id, String name, String description) 
     {
         this.id = id;
         this.name = name;
@@ -29,7 +32,7 @@ public class wunschliste
     }
 
     @Override
-    public String toString() 
+    public String toString()
     {
         return name;
     }

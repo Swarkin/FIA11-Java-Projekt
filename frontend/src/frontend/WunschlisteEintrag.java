@@ -1,12 +1,12 @@
 package frontend;
 
-public class wunschlisteEintrag
+public class WunschlisteEintrag
 {
 	private int id;
     private String titel;
     private String item;
 
-    public wunschlisteEintrag(int id, String titel, String item) 
+    public WunschlisteEintrag(int id, String titel, String item) 
     {
         this.id = id;
         this.titel = titel;
