@@ -1,13 +1,18 @@
 package frontend;
 
-public class Main
-{
+import java.awt.EventQueue;
+
+public class Main {
 	public static void main(String[] args) {
-	    EventQueue.invokeLater(() -> {
-	        WunschlisteGUI view = new WunschlisteGUI();
-	        WunschlisteService service = new WunschlisteService();
-	        new WunschlisteController(service, view);
-	        view.setVisible(true);
-	    });
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Controller c = new Controller();
+					c.start();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
