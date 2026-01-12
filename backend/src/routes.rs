@@ -117,11 +117,11 @@ pub struct RemoveWunschliste {
 
 pub async fn remove_wunschliste(
 	State(state): State<AppState>,
-	Json(data): Json<RemoveWunschliste>
+	Query(query): Query<RemoveWunschliste>
 ) -> Result<(), StatusCode> {
 	let mut app_state = state.write().await;
 
-	app_state.db.lists.remove(&data.id)
+	app_state.db.lists.remove(&query.id)
 		.ok_or(StatusCode::NOT_FOUND)
 		.map(|_| ())
 }

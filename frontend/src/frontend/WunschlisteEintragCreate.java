@@ -1,19 +1,12 @@
 package frontend;
 
-public class WunschlisteEintrag
+public class WunschlisteEintragCreate
 {
-	private int id;
     private String name;
 
-    public WunschlisteEintrag(int id, String name) 
+    public WunschlisteEintragCreate(String name) 
     {
-        this.id = id;
         this.name = name;
-    }
-
-    public int getId() 
-    { 
-    	return id; 
     }
     
     public String getName() 
