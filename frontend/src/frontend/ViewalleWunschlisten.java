@@ -1,0 +1,63 @@
+package frontend;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import java.awt.Font;
+
+public class ViewalleWunschlisten extends JFrame
+{
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JLabel lblNewLabel;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args)
+	{
+		EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				try {
+					ViewalleWunschlisten frame = new ViewalleWunschlisten();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public ViewalleWunschlisten()
+	{
+
+		initialize();
+	}
+	private void initialize() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		contentPane.add(getLblNewLabel());
+	}
+
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("Meine Listen");
+			lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+			lblNewLabel.setBounds(28, 36, 94, 12);
+		}
+		return lblNewLabel;
+	}
+}
