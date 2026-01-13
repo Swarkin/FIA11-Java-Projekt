@@ -3,6 +3,8 @@ package frontend;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller
 {
@@ -30,8 +32,31 @@ public class Controller
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				WunschlisteCreate w = new WunschlisteCreate(null, null); //
-				System.out.println(w);
+				String name = viewWunschlisteErstellen.getWunschlisteName();
+				String description = viewWunschlisteErstellen.getWunschlisteBeschreibung();
+				List<WunschlisteEintrag> items = new ArrayList<WunschlisteEintrag>();
+				
+				if (name.length() == 0 || description.length() == 0)
+				{
+					viewWunschlisteErstellen.setStatusText("Name/Beschreibung fehlt!");
+					return;
+				}
+				else
+				{
+					viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Wird erstellt...", false);
+				}
+				
+				try {
+					WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
+					Wunschliste w = model.createWunschliste(wc);
+					viewWunschlisteErstellen.setStatusText("Wunschliste erstellt mit ID " + w.getId());
+				} catch (IOException err) {
+					viewWunschlisteErstellen.setStatusText(err.toString());
+					err.printStackTrace();
+				} catch (InterruptedException err) {
+					err.printStackTrace();
+					viewWunschlisteErstellen.setStatusText(err.toString());
+				}
 			}
 		});
 		
@@ -41,6 +66,7 @@ public class Controller
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				viewWunschlisteErstellen.reset();
 				viewWunschlisteErstellen.setVisible(true);
 				viewAlleWunschlisten.setVisible(false);
 			}

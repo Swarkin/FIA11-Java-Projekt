@@ -6,12 +6,13 @@ public class WunschlisteCreate
 {
     private String name;
     private String description;
-    private List<WunschlisteEintragCreate> items;
+    private List<WunschlisteEintrag> items;
 
-    public WunschlisteCreate(String name, String description) 
+    public WunschlisteCreate(String name, String description, List<WunschlisteEintrag> items) 
     {
         this.name = name;
         this.description = description;
+        this.items = items;
     }
     
     public String getName() 
@@ -22,6 +23,11 @@ public class WunschlisteCreate
     public String getBeschreibung() 
     { 
     	return description; 
+    }
+    
+    public List<WunschlisteEintrag> getItems()
+    {
+    	return items;
     }
 
     @Override

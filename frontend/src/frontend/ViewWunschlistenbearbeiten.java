@@ -10,115 +10,136 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTextField;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class ViewWunschlistenbearbeiten extends JFrame
 {
-
 	private static final long serialVersionUID = 1L;
+
 	private JPanel contentPane;
 	private JLabel lblWunschlisteName;
-	private JButton btnhinzufügen;
-	private JLabel lblDescription;
-	private JButton btnDelete;
-	private JList list;
-	private JTextField textFieldWunschname;
 	private JLabel lblWunschname;
+	private JLabel lblWunschlisteDescription;
+	private JList<Wunschliste> listEintraege;
+	private JButton btnWunschHinzufügen;
+	private JButton btnWunschDelete;
+	private JTextField txtWunschname;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args)
-	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				try {
-					ViewWunschlistenbearbeiten frame = new ViewWunschlistenbearbeiten();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public ViewWunschlistenbearbeiten()
 	{
-
+		setTitle("Wunschliste");
 		initialize();
 	}
+	
 	private void initialize() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 448, 430);
+		setBounds(100, 100, 317, 426);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		contentPane.add(getLblWunschlisteName());
-		contentPane.add(getBtnhinzufügen());
-		contentPane.add(getLblDescription());
-		contentPane.add(getBtnDelete());
-		contentPane.add(getList());
-		contentPane.add(getTextFieldWunschname());
-		contentPane.add(getLblWunschname());
+		GridBagLayout gbl_contentPane = new GridBagLayout();
+		gbl_contentPane.columnWidths = new int[]{20, 150, 100, 20, 0};
+		gbl_contentPane.rowHeights = new int[]{20, 12, 20, 10, 150, 20, 10, 31, 10, 31, 20, 0};
+		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		contentPane.setLayout(gbl_contentPane);
+		GridBagConstraints gbc_lblWunschlisteName = new GridBagConstraints();
+		gbc_lblWunschlisteName.gridwidth = 2;
+		gbc_lblWunschlisteName.fill = GridBagConstraints.BOTH;
+		gbc_lblWunschlisteName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblWunschlisteName.gridx = 1;
+		gbc_lblWunschlisteName.gridy = 1;
+		contentPane.add(getLblWunschlisteName(), gbc_lblWunschlisteName);
+		GridBagConstraints gbc_lblWunschlisteDescription = new GridBagConstraints();
+		gbc_lblWunschlisteDescription.gridwidth = 2;
+		gbc_lblWunschlisteDescription.anchor = GridBagConstraints.SOUTH;
+		gbc_lblWunschlisteDescription.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblWunschlisteDescription.insets = new Insets(0, 0, 5, 5);
+		gbc_lblWunschlisteDescription.gridx = 1;
+		gbc_lblWunschlisteDescription.gridy = 2;
+		contentPane.add(getLblWunschlisteDescription(), gbc_lblWunschlisteDescription);
+		GridBagConstraints gbc_listEintraege = new GridBagConstraints();
+		gbc_listEintraege.gridwidth = 2;
+		gbc_listEintraege.fill = GridBagConstraints.BOTH;
+		gbc_listEintraege.insets = new Insets(0, 0, 5, 5);
+		gbc_listEintraege.gridx = 1;
+		gbc_listEintraege.gridy = 4;
+		contentPane.add(getListEintraege(), gbc_listEintraege);
+		GridBagConstraints gbc_lblWunschname = new GridBagConstraints();
+		gbc_lblWunschname.fill = GridBagConstraints.BOTH;
+		gbc_lblWunschname.insets = new Insets(0, 0, 5, 5);
+		gbc_lblWunschname.gridx = 1;
+		gbc_lblWunschname.gridy = 6;
+		contentPane.add(getLblWunschname(), gbc_lblWunschname);
+		GridBagConstraints gbc_txtWunschname = new GridBagConstraints();
+		gbc_txtWunschname.fill = GridBagConstraints.BOTH;
+		gbc_txtWunschname.insets = new Insets(0, 0, 5, 5);
+		gbc_txtWunschname.gridx = 2;
+		gbc_txtWunschname.gridy = 6;
+		contentPane.add(getTxtWunschname(), gbc_txtWunschname);
+		GridBagConstraints gbc_btnWunschHinzufügen = new GridBagConstraints();
+		gbc_btnWunschHinzufügen.fill = GridBagConstraints.BOTH;
+		gbc_btnWunschHinzufügen.insets = new Insets(0, 0, 5, 5);
+		gbc_btnWunschHinzufügen.gridwidth = 2;
+		gbc_btnWunschHinzufügen.gridx = 1;
+		gbc_btnWunschHinzufügen.gridy = 7;
+		contentPane.add(getBtnWunschHinzufügen(), gbc_btnWunschHinzufügen);
+		GridBagConstraints gbc_btnWunschDelete = new GridBagConstraints();
+		gbc_btnWunschDelete.insets = new Insets(0, 0, 5, 5);
+		gbc_btnWunschDelete.fill = GridBagConstraints.BOTH;
+		gbc_btnWunschDelete.gridwidth = 2;
+		gbc_btnWunschDelete.gridx = 1;
+		gbc_btnWunschDelete.gridy = 9;
+		contentPane.add(getBtnWunschDelete(), gbc_btnWunschDelete);
 	}
 
 	private JLabel getLblWunschlisteName() {
 		if (lblWunschlisteName == null) {
 			lblWunschlisteName = new JLabel("Titel");
 			lblWunschlisteName.setFont(new Font("Arial", Font.PLAIN, 14));
-			lblWunschlisteName.setBounds(29, 28, 77, 12);
 		}
 		return lblWunschlisteName;
 	}
-	private JButton getBtnhinzufügen() {
-		if (btnhinzufügen == null) {
-			btnhinzufügen = new JButton("Wunsch hinzufügen");
-			btnhinzufügen.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnhinzufügen.setBounds(29, 291, 372, 31);
+	private JButton getBtnWunschHinzufügen() {
+		if (btnWunschHinzufügen == null) {
+			btnWunschHinzufügen = new JButton("Wunsch hinzufügen");
+			btnWunschHinzufügen.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
-		return btnhinzufügen;
+		return btnWunschHinzufügen;
 	}
-	private JLabel getLblDescription() {
-		if (lblDescription == null) {
-			lblDescription = new JLabel("description");
-			lblDescription.setFont(new Font("Arial", Font.PLAIN, 12));
-			lblDescription.setBounds(28, 58, 77, 12);
+	private JLabel getLblWunschlisteDescription() {
+		if (lblWunschlisteDescription == null) {
+			lblWunschlisteDescription = new JLabel("description");
+			lblWunschlisteDescription.setFont(new Font("Arial", Font.PLAIN, 12));
 		}
-		return lblDescription;
+		return lblWunschlisteDescription;
 	}
-	private JButton getBtnDelete() {
-		if (btnDelete == null) {
-			btnDelete = new JButton("Wunsch löschen");
-			btnDelete.setFont(new Font("Arial", Font.PLAIN, 14));
-			btnDelete.setBounds(28, 325, 373, 31);
+	private JButton getBtnWunschDelete() {
+		if (btnWunschDelete == null) {
+			btnWunschDelete = new JButton("Wunsch löschen");
+			btnWunschDelete.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
-		return btnDelete;
+		return btnWunschDelete;
 	}
-	private JList getList() {
-		if (list == null) {
-			list = new JList();
-			list.setBounds(28, 97, 216, 181);
+	private JList<Wunschliste> getListEintraege() {
+		if (listEintraege == null) {
+			listEintraege = new JList<Wunschliste>();
 		}
-		return list;
+		return listEintraege;
 	}
-	private JTextField getTextFieldWunschname() {
-		if (textFieldWunschname == null) {
-			textFieldWunschname = new JTextField();
-			textFieldWunschname.setBounds(254, 120, 147, 19);
-			textFieldWunschname.setColumns(10);
+	private JTextField getTxtWunschname() {
+		if (txtWunschname == null) {
+			txtWunschname = new JTextField();
+			txtWunschname.setColumns(10);
 		}
-		return textFieldWunschname;
+		return txtWunschname;
 	}
 	private JLabel getLblWunschname() {
 		if (lblWunschname == null) {
 			lblWunschname = new JLabel("Wunsch hinzufügen:");
 			lblWunschname.setFont(new Font("Arial", Font.PLAIN, 12));
-			lblWunschname.setBounds(254, 98, 117, 12);
 		}
 		return lblWunschname;
 	}

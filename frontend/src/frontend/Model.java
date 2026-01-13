@@ -18,7 +18,7 @@ public class Model
 	private HttpClient http;
 	private Gson gson;
 	
-	private final String BASE_URL = "https://swarkin.dev/wunschliste";
+	private final String BASE_URL = "https://swarkin.dev";
 	
 	public Model()
 	{
@@ -53,17 +53,19 @@ public class Model
 
 		HttpRequest request = HttpRequest.newBuilder()
 			.uri(URI.create(BASE_URL+"/wunschliste/")).POST(HttpRequest.BodyPublishers.ofString(json))
+			.header("content-type", "application/json")
 			.timeout(Duration.ofSeconds(10))
 			.build();
 		
 		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
 		if (response.statusCode() != 200)
 		{
-			throw new IOException("Fehlercode: " + response.statusCode());
+			throw new IOException("Fehlercode: " + response.statusCode() + "\n" + response.body());
 		}
 		
 		json = response.body();
 		Wunschliste w = gson.fromJson(json, Wunschliste.class);
+		listen.put(w.getId(), w);
 		return w;
 	}
 	

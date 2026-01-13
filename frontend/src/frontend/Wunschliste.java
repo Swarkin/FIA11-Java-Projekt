@@ -9,7 +9,7 @@ public class Wunschliste
     private String description;
     private Map<Integer, WunschlisteEintrag> items;
 
-    public Wunschliste(int id, String name, String description, Map<Integer, WunschlisteEintrag> items) 
+    public Wunschliste(int id, String name, String description, Map<Integer, WunschlisteEintrag> items)
     {
         this.id = id;
         this.name = name;
