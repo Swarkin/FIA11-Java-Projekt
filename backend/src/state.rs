@@ -44,9 +44,16 @@ pub fn save_state(state: State) -> io::Result<()> {
 }
 
 fn get_directory() -> io::Result<std::path::PathBuf> {
-	let dir = dirs::data_dir()
-		.ok_or(io::Error::other("data directory not found"))?
-		.join("FIA11-Java-Projekt");
+	#[cfg(target_family = "windows")]
+	let mut dir = dirs::data_dir()
+		.ok_or(io::Error::other("data directory not found"))?;
+
+	#[cfg(target_family = "unix")]
+	let mut dir = std::env::var("DATA_DIR_LINUX")
+		.map(std::path::PathBuf::from)
+		.map_err(|_| io::Error::other("data directory not set"))?;
+
+	dir.push("FIA11-Java-Projekt");
 
 	Ok(dir)
 }

@@ -5,6 +5,8 @@ mod model;
 use axum::http::StatusCode;
 use axum::routing::{delete, get, patch, post, put};
 use axum::Router;
+use std::env::var;
+use std::net::Ipv4Addr;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
@@ -16,10 +18,11 @@ pub type AppState = Arc<RwLock<state::State>>;
 
 #[tokio::main]
 async fn main() {
-	tracing_subscriber::fmt::fmt()
-		.with_max_level(LevelFilter::TRACE)
-		.without_time()
-		.init();
+	initialize();
+
+	let port = var("PORT")
+		.expect("PORT variable not set")
+		.parse::<u16>().unwrap();
 
 	let state = Arc::new(RwLock::new(
 		state::load_state()
@@ -27,25 +30,38 @@ async fn main() {
 	));
 
 	let app = Router::new()
-		.route("/", get(|| async { "Hello, world!" }))
-		.route("/wunschliste", get(routes::get_wunschliste))
-		.route("/wunschliste/batch", get(routes::get_wunschliste_batch))
-		.route("/wunschliste", post(routes::create_wunschliste))
-		.route("/wunschliste", patch(routes::patch_wunschliste))
-		.route("/wunschliste", delete(routes::remove_wunschliste))
-		.route("/wunschliste/eintrag", put(routes::create_wunschliste_eintrag))
-		.route("/wunschliste/eintrag", delete(routes::remove_wunschliste_eintrag))
+		.route("/", get(routes::get_wunschliste))
+		.route("/batch", get(routes::get_wunschliste_batch))
+		.route("/", post(routes::create_wunschliste))
+		.route("/", patch(routes::patch_wunschliste))
+		.route("/", delete(routes::remove_wunschliste))
+		.route("/eintrag", put(routes::create_wunschliste_eintrag))
+		.route("/eintrag", delete(routes::remove_wunschliste_eintrag))
 		.layer(TimeoutLayer::with_status_code(StatusCode::REQUEST_TIMEOUT, Duration::from_secs(10)))
 		.layer(TraceLayer::new_for_http())
 		.with_state(state.clone());
 
-	let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+	tracing::info!("Starting on port {port}");
+	let listener = tokio::net::TcpListener::bind((Ipv4Addr::UNSPECIFIED, port)).await.unwrap();
 	axum::serve(listener, app)
 		.with_graceful_shutdown(shutdown_signal()).await.unwrap();
 
+	tracing::info!("Saving state");
 	let _ = state.write().await;
 	state::save_state(Arc::try_unwrap(state).unwrap().into_inner())
 		.expect("failed to save state");
+
+	tracing::info!("Exiting");
+}
+
+fn initialize() {
+	#[cfg(windows)]
+	dotenvy::dotenv().unwrap();
+
+	tracing_subscriber::fmt::fmt()
+		.with_max_level(if cfg!(debug_assertions) { LevelFilter::TRACE } else { LevelFilter::DEBUG })
+		.without_time()
+		.init();
 }
 
 async fn shutdown_signal() {
@@ -55,7 +71,7 @@ async fn shutdown_signal() {
 
 	#[cfg(unix)]
 	let terminate = async {
-		signal::unix::signal(signal::unix::SignalKind::terminate()).unwrap().recv().await;
+		tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate()).unwrap().recv().await;
 	};
 
 	#[cfg(not(unix))]
