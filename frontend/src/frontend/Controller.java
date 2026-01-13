@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import com.formdev.flatlaf.FlatDarculaLaf;
+
 public class Controller
 {
 	private Model model;
@@ -16,6 +21,13 @@ public class Controller
 	public Controller()
 	{
 		model = new Model();
+		
+		// Dark mode
+		try {
+			UIManager.setLookAndFeel(new FlatDarculaLaf());
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 		
 		viewWunschlisteErstellen = new ViewWunschlisteErstellen();
 		viewWunschlisteErstellen.btnZurueckModel.addActionListener(new ActionListener()
@@ -46,14 +58,19 @@ public class Controller
 					viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Wird erstellt...", false);
 				}
 				
-				try {
+				try
+				{
 					WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
 					Wunschliste w = model.createWunschliste(wc);
 					viewWunschlisteErstellen.setStatusText("Wunschliste erstellt mit ID " + w.getId());
-				} catch (IOException err) {
+				}
+				catch (IOException err)
+				{
 					viewWunschlisteErstellen.setStatusText(err.toString());
 					err.printStackTrace();
-				} catch (InterruptedException err) {
+				}
+				catch (InterruptedException err)
+				{
 					err.printStackTrace();
 					viewWunschlisteErstellen.setStatusText(err.toString());
 				}
@@ -75,6 +92,6 @@ public class Controller
 	
 	public void start()
 	{
-		viewWunschlisteErstellen.setVisible(true);
+		viewAlleWunschlisten.setVisible(true);
 	}
 }
