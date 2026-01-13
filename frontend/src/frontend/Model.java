@@ -18,7 +18,7 @@ public class Model
 	private HttpClient http;
 	private Gson gson;
 	
-	private URL = "http://"
+	private final String BASE_URL = "https://swarkin.dev/wunschliste";
 	
 	public Model()
 	{
@@ -32,7 +32,7 @@ public class Model
 	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create("http://127.0.0.1:3000/wunschliste?id="+id)).GET()
+			.uri(URI.create(BASE_URL+"/wunschliste/?id="+id)).GET()
 			.timeout(Duration.ofSeconds(10))
 			.build();
 		
@@ -52,7 +52,7 @@ public class Model
 		String json = gson.toJson(wunschliste);
 
 		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create("http://127.0.0.1:3000/wunschliste")).POST(HttpRequest.BodyPublishers.ofString(json))
+			.uri(URI.create(BASE_URL+"/wunschliste/")).POST(HttpRequest.BodyPublishers.ofString(json))
 			.timeout(Duration.ofSeconds(10))
 			.build();
 		
@@ -70,7 +70,7 @@ public class Model
 	public void deleteWunschliste(int id) throws IOException, InterruptedException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create("http://127.0.0.1:3000/wunschliste?id="+id)).DELETE()
+			.uri(URI.create(BASE_URL+"/wunschliste/?id="+id)).DELETE()
 			.timeout(Duration.ofSeconds(10))
 			.build();
 		HttpResponse<Void> response = http.send(request, BodyHandlers.discarding());

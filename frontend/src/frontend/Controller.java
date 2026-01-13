@@ -6,31 +6,45 @@ import java.io.IOException;
 
 public class Controller
 {
-	private ViewWunschlisteErstellen viewWunschlisteErstellen;
-	private ViewalleWunschlisten viewAlleWunschlisten;
 	private Model model;
+	
+	private ViewWunschlisteErstellen viewWunschlisteErstellen;
+	private ViewAlleWunschlisten viewAlleWunschlisten;
 	
 	public Controller()
 	{
+		model = new Model();
+		
 		viewWunschlisteErstellen = new ViewWunschlisteErstellen();
 		viewWunschlisteErstellen.btnZurueckModel.addActionListener(new ActionListener()
 		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				viewWunschlisteErstellen.setVisible(false);
 				viewAlleWunschlisten.setVisible(true);
 			}
 		});
-		viewWunschlisteErstellen.btnErstellenModel.addActionListener(new ActionListener() {
+		viewWunschlisteErstellen.btnErstellenModel.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e)
+			{
+				WunschlisteCreate w = new WunschlisteCreate(null, null); //
+				System.out.println(w);
 			}
 		});
-		viewAlleWunschlisten = new ViewalleWunschlisten();
-		model = new Model();
 		
-		model.createWunschliste(new Wunschliste(1, "Test", "Description"));
+		viewAlleWunschlisten = new ViewAlleWunschlisten();
+		viewAlleWunschlisten.btnNeueWunschlisteModel.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				viewWunschlisteErstellen.setVisible(true);
+				viewAlleWunschlisten.setVisible(false);
+			}
+		});
 	}
 	
 	public void start()

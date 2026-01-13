@@ -5,16 +5,20 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 
-public class ViewalleWunschlisten extends JFrame
+public class ViewAlleWunschlisten extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JLabel lblNewLabel;
 	private JButton btnNeueWunschliste;
+	
+	public ButtonModel btnNeueWunschlisteModel;
 
-	public ViewalleWunschlisten()
+	public ViewAlleWunschlisten()
 	{
 		initialize();
 	}
@@ -47,6 +51,7 @@ public class ViewalleWunschlisten extends JFrame
 			btnNeueWunschliste = new JButton("Neue Wunschliste");
 			btnNeueWunschliste.setFont(new Font("Arial", Font.PLAIN, 12));
 			btnNeueWunschliste.setBounds(10, 227, 150, 23);
+			btnNeueWunschlisteModel = btnNeueWunschliste.getModel();
 		}
 		return btnNeueWunschliste;
 	}
