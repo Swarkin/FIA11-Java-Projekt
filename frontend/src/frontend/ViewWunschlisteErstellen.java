@@ -37,6 +37,13 @@ public class ViewWunschlisteErstellen extends JFrame
 		initialize();
 	}
 
+	public void reset() {
+		txtWunschlisteName.setText("");
+		txtWunschlisteBeschreibung.setText("");
+		lblStatus.setText("");
+		btnWunschlisteErstellenKonfiguieren("Wunschliste erstellen", true);
+	}
+	
 	private void initialize()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,13 +105,6 @@ public class ViewWunschlisteErstellen extends JFrame
 		gbc_lblStatus.gridx = 1;
 		gbc_lblStatus.gridy = 12;
 		contentPane.add(getLblStatus(), gbc_lblStatus);
-	}
-	
-	public void reset() {
-		txtWunschlisteName.setText("");
-		txtWunschlisteBeschreibung.setText("");
-		lblStatus.setText("");
-		btnWunschlisteErstellenKonfiguieren("Wunschliste erstellen", true);
 	}
 	
 	public String getWunschlisteName()

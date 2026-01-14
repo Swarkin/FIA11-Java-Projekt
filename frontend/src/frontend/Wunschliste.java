@@ -16,6 +16,14 @@ public class Wunschliste
         this.description = description;
         this.items = items;
     }
+    
+    public Wunschliste(String name, String description, Map<Integer, WunschlisteEintrag> items)
+    {
+    	this.id = -1;
+        this.name = name;
+        this.description = description;
+        this.items = items;
+    }
 
     public int getId() 
     { 

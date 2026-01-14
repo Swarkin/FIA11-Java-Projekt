@@ -1,6 +1,8 @@
-package frontend;
+package WunschlistenAPI;
 
 import java.util.List;
+
+import frontend.WunschlisteEintrag;
 
 public class WunschlisteCreate
 {

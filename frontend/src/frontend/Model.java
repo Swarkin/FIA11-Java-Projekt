@@ -1,84 +1,89 @@
 package frontend;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import WunschlistenAPI.WunschlisteCreate;
+import WunschlistenAPI.WunschlistenAPI;
 
 public class Model 
 {
+	private final String CONFIG_FILE = "config.json";
+
 	private Map<Integer, Wunschliste> listen;
-	private HttpClient http;
-	private Gson gson;
+	private WunschlistenAPI api;
 	
-	private final String BASE_URL = "https://swarkin.dev";
+	public Config config;
 	
 	public Model()
 	{
 		listen = new HashMap<Integer, Wunschliste>();
-		http = HttpClient.newBuilder()
-			.connectTimeout(Duration.ofSeconds(10))
-			.build();
-		gson = new Gson();
+		api = new WunschlistenAPI("https://swarkin.dev");
 	}
 	
 	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException
 	{
-		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create(BASE_URL+"/wunschliste/?id="+id)).GET()
-			.timeout(Duration.ofSeconds(10))
-			.build();
+		pruefeId(id);
 		
-		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
-		if (response.statusCode() != 200)
+		Wunschliste w = listen.get(id);
+		if (w != null)
 		{
-			throw new IOException("Fehlercode: " + response.statusCode());
+			return w;
 		}
 		
-		String json = response.body();
-		Wunschliste wunschliste = gson.fromJson(json, Wunschliste.class);
-		return wunschliste;
-	}
-	
-	public Wunschliste createWunschliste(WunschlisteCreate wunschliste) throws IOException, InterruptedException
-	{
-		String json = gson.toJson(wunschliste);
-
-		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create(BASE_URL+"/wunschliste/")).POST(HttpRequest.BodyPublishers.ofString(json))
-			.header("content-type", "application/json")
-			.timeout(Duration.ofSeconds(10))
-			.build();
+		w = api.getWunschliste(id);
+		listen.put(id, w);
 		
-		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
-		if (response.statusCode() != 200)
-		{
-			throw new IOException("Fehlercode: " + response.statusCode() + "\n" + response.body());
-		}
-		
-		json = response.body();
-		Wunschliste w = gson.fromJson(json, Wunschliste.class);
-		listen.put(w.getId(), w);
 		return w;
 	}
 	
-	public void deleteWunschliste(int id) throws IOException, InterruptedException
+	public Wunschliste createWunschliste(WunschlisteCreate wc) throws IOException, InterruptedException
 	{
-		HttpRequest request = HttpRequest.newBuilder()
-			.uri(URI.create(BASE_URL+"/wunschliste/?id="+id)).DELETE()
-			.timeout(Duration.ofSeconds(10))
-			.build();
-		HttpResponse<Void> response = http.send(request, BodyHandlers.discarding());
-		if (response.statusCode() != 200)
+		Wunschliste w = api.createWunschliste(wc);
+		listen.put(w.getId(), w);
+		
+		return w;
+	}
+	
+	public void ladeConfig() throws IOException
+	{
+		try(BufferedReader in = new BufferedReader(new FileReader(CONFIG_FILE)))
 		{
-			throw new IOException("Fehlercode: " + response.statusCode());
+			config = new Gson().fromJson(in, Config.class);
+		}
+		catch(FileNotFoundException | JsonSyntaxException _e)
+		{
+			config = new Config();
+		}
+	}
+	
+	public void speichereConfig() throws IOException
+	{
+		if (config == null)
+		{
+			throw new IOException("Config ist null");
+		}
+		
+		try(BufferedWriter out = new BufferedWriter(new FileWriter(CONFIG_FILE)))
+		{
+			out.write(new Gson().toJson(config));
+		}
+	}
+	
+	private void pruefeId(int id) throws IOException
+	{
+		if (id < 0)
+		{
+			throw new IOException("ID kleiner als 0");
 		}
 	}
 }

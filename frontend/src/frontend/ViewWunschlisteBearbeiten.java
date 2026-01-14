@@ -12,23 +12,37 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-public class ViewWunschlistenbearbeiten extends JFrame
+public class ViewWunschlisteBearbeiten extends JFrame
 {
 	private static final long serialVersionUID = 1L;
+	
+	private Wunschliste wunschliste;
 
 	private JPanel contentPane;
 	private JLabel lblWunschlisteName;
-	private JLabel lblWunschname;
 	private JLabel lblWunschlisteDescription;
+	private JLabel lblWunschname;
 	private JList<Wunschliste> listEintraege;
 	private JButton btnWunschHinzufügen;
 	private JButton btnWunschDelete;
 	private JTextField txtWunschname;
 
-	public ViewWunschlistenbearbeiten()
+	public ViewWunschlisteBearbeiten()
 	{
 		setTitle("Wunschliste");
 		initialize();
+	}
+	
+	public void setzeWunschliste(Wunschliste wunschliste)
+	{
+		this.wunschliste = wunschliste;
+		this.lblWunschlisteName.setText(wunschliste.getName());
+		this.lblWunschlisteDescription.setText(wunschliste.getBeschreibung());
+	}
+	
+	public void reset()
+	{
+		wunschliste = null;
 	}
 	
 	private void initialize() {
