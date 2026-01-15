@@ -1,18 +1,18 @@
 package frontend;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.ListModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.ButtonModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class ViewAlleWunschlisten extends JFrame
 {
@@ -25,7 +25,7 @@ public class ViewAlleWunschlisten extends JFrame
 	private JButton btnWunschlisteBearbeiten;
 	private JButton btnSpeichern;
 
-	public ListModel<Wunschliste> listWunschlistenModel;
+	public DefaultListModel<Wunschliste> listWunschlistenModel;
 	public ButtonModel btnWunschlisteErstellenModel;
 	public ButtonModel btnWunschlisteBearbeitenModel;
 	public ButtonModel btnSpeichernModel;
@@ -101,8 +101,8 @@ public class ViewAlleWunschlisten extends JFrame
 	{
 		if (listWunschlisten == null)
 		{
-			listWunschlisten = new JList<Wunschliste>();
-			listWunschlistenModel = listWunschlisten.getModel();
+			listWunschlistenModel = new DefaultListModel<Wunschliste>();
+			listWunschlisten = new JList<Wunschliste>(listWunschlistenModel);
 		}
 		return listWunschlisten;
 	}

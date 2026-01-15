@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,11 @@ public class Model
 	{
 		listen = new HashMap<Integer, Wunschliste>();
 		api = new WunschlistenAPI("https://swarkin.dev");
+	}
+
+	public Collection<Wunschliste> getLokaleWunschlisten()
+	{
+		return listen.values();
 	}
 
 	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException, ApiException

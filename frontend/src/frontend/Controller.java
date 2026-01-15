@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -34,7 +35,6 @@ public class Controller
 
 	public void start()
 	{
-		ListIterator<Integer> listen = model.config.getListenIDs();
 		int gesamt = model.config.getListenIDsAnzahl();
 
 		if (gesamt > 0)
@@ -73,6 +73,7 @@ public class Controller
 				@Override
 				protected void process(List<Integer> chunks)
 				{
+					int gesamt = model.config.getListenIDsAnzahl();
 					int aktuellerWert = chunks.get(chunks.size() - 1);
 					viewWunschlistenLaden.setzeFortschrittText(aktuellerWert, gesamt);
 				}
@@ -147,6 +148,8 @@ public class Controller
 		viewWunschlisteErstellen = new ViewWunschlisteErstellen();
 		viewWunschlisteErstellen.btnZurueckModel.addActionListener(_e -> {
 			viewWunschlisteErstellen.setVisible(false);
+			viewAlleWunschlisten.listWunschlistenModel.removeAllElements();
+			viewAlleWunschlisten.listWunschlistenModel.addAll(model.getLokaleWunschlisten());
 			viewAlleWunschlisten.setVisible(true);
 		});
 		viewWunschlisteErstellen.btnErstellenModel.addActionListener(_e -> {
@@ -164,16 +167,46 @@ public class Controller
 				viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Wird erstellt...", false);
 			}
 
-			try
+			WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
+
+			SwingWorker<Void, Wunschliste> worker = new SwingWorker<>()
 			{
-				WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
-				Wunschliste w = model.createWunschliste(wc);
-				viewWunschlisteErstellen.setStatusText("Wunschliste erstellt mit ID " + w.getId());
-			} catch (ApiException | IOException | InterruptedException err)
-			{
-				err.printStackTrace();
-				viewWunschlisteErstellen.setStatusText(err.toString());
-			}
+				@Override
+				protected Void doInBackground() throws Exception
+				{
+					Wunschliste w = model.createWunschliste(wc);
+					publish(w);
+					return null;
+				}
+
+				@Override
+				protected void done()
+				{
+					try
+					{
+						get();
+						viewWunschlisteErstellen.setStatusText("Wunschliste erstellt!");
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+						viewWunschlisteErstellen.setStatusText(e.toString());
+					} catch (ExecutionException e)
+					{
+						Throwable t = e.getCause();
+						if (t != null)
+						{
+							t.printStackTrace();
+							viewWunschlisteErstellen.setStatusText(t.toString());
+						}
+					} catch (Exception e)
+					{
+						e.printStackTrace();
+						viewWunschlisteErstellen.setStatusText(e.toString());
+					}
+				}
+			};
+
+			worker.execute();
 		});
 
 		viewWunschlisteBearbeiten = new ViewWunschlisteBearbeiten();
