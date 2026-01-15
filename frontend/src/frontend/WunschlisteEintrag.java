@@ -3,27 +3,27 @@ package frontend;
 public class WunschlisteEintrag
 {
 	private int id;
-    private String name;
+	private String name;
 
-    public WunschlisteEintrag(int id, String name) 
-    {
-        this.id = id;
-        this.name = name;
-    }
+	public WunschlisteEintrag(int id, String name)
+	{
+		this.id = id;
+		this.name = name;
+	}
 
-    public int getId() 
-    { 
-    	return id; 
-    }
-    
-    public String getName() 
-    { 
-    	return name; 
-    }
-    
-    @Override
-    public String toString() 
-    {
-        return name;
-    }
+	public int getId()
+	{
+		return id;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

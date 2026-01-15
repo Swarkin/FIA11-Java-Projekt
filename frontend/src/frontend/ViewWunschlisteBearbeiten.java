@@ -15,7 +15,7 @@ import java.awt.Insets;
 public class ViewWunschlisteBearbeiten extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Wunschliste wunschliste;
 
 	private JPanel contentPane;
@@ -32,30 +32,31 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		setTitle("Wunschliste");
 		initialize();
 	}
-	
+
 	public void setzeWunschliste(Wunschliste wunschliste)
 	{
 		this.wunschliste = wunschliste;
 		this.lblWunschlisteName.setText(wunschliste.getName());
 		this.lblWunschlisteDescription.setText(wunschliste.getBeschreibung());
 	}
-	
+
 	public void reset()
 	{
 		wunschliste = null;
 	}
-	
-	private void initialize() {
+
+	private void initialize()
+	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 317, 426);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 150, 100, 20, 0};
-		gbl_contentPane.rowHeights = new int[]{20, 12, 20, 10, 150, 20, 10, 31, 10, 31, 20, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[] { 20, 150, 100, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 10, 150, 20, 10, 31, 10, 31, 20, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblWunschlisteName = new GridBagConstraints();
 		gbc_lblWunschlisteName.gridwidth = 2;
@@ -107,49 +108,69 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		contentPane.add(getBtnWunschDelete(), gbc_btnWunschDelete);
 	}
 
-	private JLabel getLblWunschlisteName() {
-		if (lblWunschlisteName == null) {
+	private JLabel getLblWunschlisteName()
+	{
+		if (lblWunschlisteName == null)
+		{
 			lblWunschlisteName = new JLabel("Titel");
 			lblWunschlisteName.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
 		return lblWunschlisteName;
 	}
-	private JButton getBtnWunschHinzufügen() {
-		if (btnWunschHinzufügen == null) {
+
+	private JButton getBtnWunschHinzufügen()
+	{
+		if (btnWunschHinzufügen == null)
+		{
 			btnWunschHinzufügen = new JButton("Wunsch hinzufügen");
 			btnWunschHinzufügen.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
 		return btnWunschHinzufügen;
 	}
-	private JLabel getLblWunschlisteDescription() {
-		if (lblWunschlisteDescription == null) {
+
+	private JLabel getLblWunschlisteDescription()
+	{
+		if (lblWunschlisteDescription == null)
+		{
 			lblWunschlisteDescription = new JLabel("description");
 			lblWunschlisteDescription.setFont(new Font("Arial", Font.PLAIN, 12));
 		}
 		return lblWunschlisteDescription;
 	}
-	private JButton getBtnWunschDelete() {
-		if (btnWunschDelete == null) {
+
+	private JButton getBtnWunschDelete()
+	{
+		if (btnWunschDelete == null)
+		{
 			btnWunschDelete = new JButton("Wunsch löschen");
 			btnWunschDelete.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
 		return btnWunschDelete;
 	}
-	private JList<Wunschliste> getListEintraege() {
-		if (listEintraege == null) {
+
+	private JList<Wunschliste> getListEintraege()
+	{
+		if (listEintraege == null)
+		{
 			listEintraege = new JList<Wunschliste>();
 		}
 		return listEintraege;
 	}
-	private JTextField getTxtWunschname() {
-		if (txtWunschname == null) {
+
+	private JTextField getTxtWunschname()
+	{
+		if (txtWunschname == null)
+		{
 			txtWunschname = new JTextField();
 			txtWunschname.setColumns(10);
 		}
 		return txtWunschname;
 	}
-	private JLabel getLblWunschname() {
-		if (lblWunschname == null) {
+
+	private JLabel getLblWunschname()
+	{
+		if (lblWunschname == null)
+		{
 			lblWunschname = new JLabel("Wunsch hinzufügen:");
 			lblWunschname.setFont(new Font("Arial", Font.PLAIN, 12));
 		}

@@ -16,7 +16,7 @@ import java.awt.Insets;
 public class ViewWunschlisteErstellen extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel contentPane;
 	private JLabel lblTitel;
 	private JLabel lblWunschlisteName;
@@ -25,7 +25,7 @@ public class ViewWunschlisteErstellen extends JFrame
 	private JTextArea txtWunschlisteBeschreibung;
 	private JButton btnWunschlisteErstellen;
 	private JButton btnZurueck;
-	
+
 	public ButtonModel btnZurueckModel;
 	public ButtonModel btnErstellenModel;
 	private JLabel lblStatus;
@@ -37,13 +37,14 @@ public class ViewWunschlisteErstellen extends JFrame
 		initialize();
 	}
 
-	public void reset() {
+	public void reset()
+	{
 		txtWunschlisteName.setText("");
 		txtWunschlisteBeschreibung.setText("");
 		lblStatus.setText("");
 		btnWunschlisteErstellenKonfiguieren("Wunschliste erstellen", true);
 	}
-	
+
 	private void initialize()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,10 +53,10 @@ public class ViewWunschlisteErstellen extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 235, 20, 0};
-		gbl_contentPane.rowHeights = new int[]{20, 23, 20, 0, 0, 10, 0, 0, 20, 23, 23, 0, 0, 20, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[] { 20, 235, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 23, 20, 0, 0, 10, 0, 0, 20, 23, 23, 0, 0, 20, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblTitel = new GridBagConstraints();
 		gbc_lblTitel.fill = GridBagConstraints.BOTH;
@@ -106,28 +107,28 @@ public class ViewWunschlisteErstellen extends JFrame
 		gbc_lblStatus.gridy = 12;
 		contentPane.add(getLblStatus(), gbc_lblStatus);
 	}
-	
+
 	public String getWunschlisteName()
 	{
 		return txtWunschlisteName.getText();
 	}
-	
+
 	public String getWunschlisteBeschreibung()
 	{
 		return txtWunschlisteBeschreibung.getText();
 	}
-	
+
 	public void btnWunschlisteErstellenKonfiguieren(String text, boolean enabled)
 	{
 		btnWunschlisteErstellen.setText(text);
 		btnWunschlisteErstellen.setEnabled(enabled);
 	}
-	
+
 	public void setStatusText(String s)
 	{
 		lblStatus.setText(s);
 	}
-	
+
 	private JLabel getLblTitel()
 	{
 		if (lblTitel == null)
@@ -137,6 +138,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return lblTitel;
 	}
+
 	private JLabel getLblWunschlisteName()
 	{
 		if (lblWunschlisteName == null)
@@ -146,6 +148,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return lblWunschlisteName;
 	}
+
 	private JTextField getTxtWunschlisteName()
 	{
 		if (txtWunschlisteName == null)
@@ -156,6 +159,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return txtWunschlisteName;
 	}
+
 	private JLabel getLblWunschlisteBeschreibung()
 	{
 		if (lblWunschlisteBeschreibung == null)
@@ -165,6 +169,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return lblWunschlisteBeschreibung;
 	}
+
 	private JTextArea getTxtWunschlisteBeschreibung()
 	{
 		if (txtWunschlisteBeschreibung == null)
@@ -174,6 +179,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return txtWunschlisteBeschreibung;
 	}
+
 	private JButton getBtnWunschlisteErstellen()
 	{
 		if (btnWunschlisteErstellen == null)
@@ -184,6 +190,7 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return btnWunschlisteErstellen;
 	}
+
 	private JButton getBtnZurueck()
 	{
 		if (btnZurueck == null)
@@ -194,8 +201,11 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return btnZurueck;
 	}
-	private JLabel getLblStatus() {
-		if (lblStatus == null) {
+
+	private JLabel getLblStatus()
+	{
+		if (lblStatus == null)
+		{
 			lblStatus = new JLabel("");
 		}
 		return lblStatus;

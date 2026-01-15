@@ -2,6 +2,7 @@ package frontend;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -16,14 +17,15 @@ import javax.swing.JList;
 public class ViewAlleWunschlisten extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel contentPane;
 	private JLabel lblWunschlisten;
 	private JList<Wunschliste> listWunschlisten;
 	private JButton btnWunschlisteErstellen;
 	private JButton btnWunschlisteBearbeiten;
 	private JButton btnSpeichern;
-	
+
+	public ListModel<Wunschliste> listWunschlistenModel;
 	public ButtonModel btnWunschlisteErstellenModel;
 	public ButtonModel btnWunschlisteBearbeitenModel;
 	public ButtonModel btnSpeichernModel;
@@ -33,12 +35,12 @@ public class ViewAlleWunschlisten extends JFrame
 		setTitle("Wunschlisten");
 		initialize();
 	}
-	
+
 	public Wunschliste getSelectedWunschliste()
 	{
 		return null;
 	}
-	
+
 	private void initialize()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,10 +49,10 @@ public class ViewAlleWunschlisten extends JFrame
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 150, 20, 0};
-		gbl_contentPane.rowHeights = new int[]{20, 12, 20, 0, 20, 0, 0, 20, 0, 20, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[] { 20, 150, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 0, 20, 0, 0, 20, 0, 20, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblWunschlisten = new GridBagConstraints();
 		gbc_lblWunschlisten.anchor = GridBagConstraints.WEST;
@@ -94,12 +96,17 @@ public class ViewAlleWunschlisten extends JFrame
 		}
 		return lblWunschlisten;
 	}
-	private JList<Wunschliste> getListWunschlisten() {
-		if (listWunschlisten == null) {
+
+	private JList<Wunschliste> getListWunschlisten()
+	{
+		if (listWunschlisten == null)
+		{
 			listWunschlisten = new JList<Wunschliste>();
+			listWunschlistenModel = listWunschlisten.getModel();
 		}
 		return listWunschlisten;
 	}
+
 	private JButton getBtnWunschlisteErstellen()
 	{
 		if (btnWunschlisteErstellen == null)
@@ -110,16 +117,22 @@ public class ViewAlleWunschlisten extends JFrame
 		}
 		return btnWunschlisteErstellen;
 	}
-	private JButton getBtnWunschlisteBearbeiten() {
-		if (btnWunschlisteBearbeiten == null) {
+
+	private JButton getBtnWunschlisteBearbeiten()
+	{
+		if (btnWunschlisteBearbeiten == null)
+		{
 			btnWunschlisteBearbeiten = new JButton("Bearbeiten");
 			btnWunschlisteBearbeiten.setFont(new Font("Arial", Font.PLAIN, 12));
 			btnWunschlisteBearbeitenModel = btnWunschlisteBearbeiten.getModel();
 		}
 		return btnWunschlisteBearbeiten;
 	}
-	private JButton getBtnSpeichern() {
-		if (btnSpeichern == null) {
+
+	private JButton getBtnSpeichern()
+	{
+		if (btnSpeichern == null)
+		{
 			btnSpeichern = new JButton("Speichern");
 			btnSpeichern.setFont(new Font("Arial", Font.PLAIN, 12));
 			btnSpeichernModel = btnSpeichern.getModel();

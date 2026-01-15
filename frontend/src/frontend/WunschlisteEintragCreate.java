@@ -2,21 +2,21 @@ package frontend;
 
 public class WunschlisteEintragCreate
 {
-    private String name;
+	private String name;
 
-    public WunschlisteEintragCreate(String name) 
-    {
-        this.name = name;
-    }
-    
-    public String getName() 
-    { 
-    	return name; 
-    }
-    
-    @Override
-    public String toString() 
-    {
-        return name;
-    }
+	public WunschlisteEintragCreate(String name)
+	{
+		this.name = name;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

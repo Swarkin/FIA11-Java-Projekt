@@ -16,75 +16,74 @@ import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
 import WunschlistenAPI.WunschlistenAPI;
 
-public class Model 
+public class Model
 {
 	private final String CONFIG_FILE = "config.json";
 
 	private Map<Integer, Wunschliste> listen;
 	private WunschlistenAPI api;
-	
+
 	public Config config;
-	
+
 	public Model()
 	{
 		listen = new HashMap<Integer, Wunschliste>();
 		api = new WunschlistenAPI("https://swarkin.dev");
 	}
-	
+
 	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException, ApiException
 	{
 		pruefeId(id);
-		
+
 		Wunschliste w = listen.get(id);
 		if (w != null)
 		{
 			return w;
 		}
-		
+
 		w = api.getWunschliste(id);
 		listen.put(id, w);
-		
+
 		return w;
 	}
-	
+
 	public Wunschliste createWunschliste(WunschlisteCreate wc) throws IOException, InterruptedException, ApiException
 	{
 		Wunschliste w = api.createWunschliste(wc);
-		
+
 		if (w != null)
 		{
 			listen.put(w.getId(), w);
 			config.addListenID(w.getId());
 		}
-		
+
 		return w;
 	}
-	
+
 	public void ladeConfig() throws IOException
 	{
-		try(BufferedReader in = new BufferedReader(new FileReader(CONFIG_FILE)))
+		try (BufferedReader in = new BufferedReader(new FileReader(CONFIG_FILE)))
 		{
 			config = new Gson().fromJson(in, Config.class);
-		}
-		catch(FileNotFoundException | JsonSyntaxException _e)
+		} catch (FileNotFoundException | JsonSyntaxException _e)
 		{
 			config = new Config();
 		}
 	}
-	
+
 	public void speichereConfig() throws IOException
 	{
 		if (config == null)
 		{
 			throw new IOException("Config ist null");
 		}
-		
-		try(BufferedWriter out = new BufferedWriter(new FileWriter(CONFIG_FILE)))
+
+		try (BufferedWriter out = new BufferedWriter(new FileWriter(CONFIG_FILE)))
 		{
 			out.write(new Gson().toJson(config));
 		}
 	}
-	
+
 	private void pruefeId(int id) throws IOException
 	{
 		if (id < 0)

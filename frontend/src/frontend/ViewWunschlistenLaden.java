@@ -12,7 +12,7 @@ import java.awt.Font;
 public class ViewWunschlistenLaden extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel contentPane;
 	private JLabel lblAbfragenText;
 	private JLabel lblLadenFortschritt;
@@ -23,23 +23,24 @@ public class ViewWunschlistenLaden extends JFrame
 		setTitle("Wunschlisten laden...");
 		initialize();
 	}
-	
+
 	public void setzeFortschrittText(int erledigt, int gesamt)
 	{
 		lblLadenFortschritt.setText(erledigt + " von " + gesamt);
 	}
-	
-	private void initialize() {
+
+	private void initialize()
+	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 300, 149);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 0, 20, 0};
-		gbl_contentPane.rowHeights = new int[]{20, 0, 0, 20, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[] { 20, 0, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 0, 0, 20, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblAbfragenText = new GridBagConstraints();
 		gbc_lblAbfragenText.insets = new Insets(0, 0, 5, 5);
@@ -52,15 +53,21 @@ public class ViewWunschlistenLaden extends JFrame
 		gbc_lblLadenFortschritt.gridy = 2;
 		contentPane.add(getLblLadenFortschritt(), gbc_lblLadenFortschritt);
 	}
-	private JLabel getLblAbfragenText() {
-		if (lblAbfragenText == null) {
+
+	private JLabel getLblAbfragenText()
+	{
+		if (lblAbfragenText == null)
+		{
 			lblAbfragenText = new JLabel("Wunschlisten werden abgefragt...");
 			lblAbfragenText.setFont(new Font("Arial", Font.PLAIN, 14));
 		}
 		return lblAbfragenText;
 	}
-	private JLabel getLblLadenFortschritt() {
-		if (lblLadenFortschritt == null) {
+
+	private JLabel getLblLadenFortschritt()
+	{
+		if (lblLadenFortschritt == null)
+		{
 			lblLadenFortschritt = new JLabel("");
 			lblLadenFortschritt.setFont(new Font("Arial", Font.PLAIN, 12));
 		}

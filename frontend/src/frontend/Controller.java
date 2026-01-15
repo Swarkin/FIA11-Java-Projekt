@@ -18,107 +18,104 @@ import WunschlistenAPI.WunschlisteCreate;
 public class Controller
 {
 	private Model model;
-	
+
 	private ViewAlleWunschlisten viewAlleWunschlisten;
 	private ViewWunschlisteErstellen viewWunschlisteErstellen;
 	private ViewWunschlisteBearbeiten viewWunschlisteBearbeiten;
-	
+
 	public Controller()
 	{
 		model = new Model();
-		
+
 		configLaden();
 		darkMode();
 		viewsVorbereiten();
 	}
-	
+
 	public void start()
 	{
 		ListIterator<Integer> listen = model.config.getListenIDs();
 		int gesamt = model.config.getListenIDsAnzahl();
-		
-		if (gesamt > 0)			
+
+		if (gesamt > 0)
 		{
 			int i = 1;
 			ViewWunschlistenLaden viewWunschlistenLaden = new ViewWunschlistenLaden();
 			viewWunschlistenLaden.setzeFortschrittText(i, gesamt);
 			viewWunschlistenLaden.setVisible(true);
-			
+
 			SwingWorker<Void, Integer> worker = new SwingWorker<>()
 			{
-			    @Override
-			    protected Void doInBackground() throws Exception
-			    {
-			        ListIterator<Integer> listen = model.config.getListenIDs();
-			        int i = 1;
+				@Override
+				protected Void doInBackground() throws Exception
+				{
+					ListIterator<Integer> listen = model.config.getListenIDs();
+					int i = 1;
 
-			        while (listen.hasNext()) {
-			            Integer id = listen.next();
-			            try
-			            {
-			                model.getWunschliste(id);
-			            }
-			            catch (ApiException e)
-			            {
-			                if (e.getStatus() != 404)
-			                {
-			                    e.printStackTrace();
-			                }
-			            }
-			            publish(i++);
-			        }
-			        return null;
-			    }
+					while (listen.hasNext())
+					{
+						Integer id = listen.next();
+						try
+						{
+							model.getWunschliste(id);
+						} catch (ApiException e)
+						{
+							if (e.getStatus() != 404)
+							{
+								e.printStackTrace();
+							}
+						}
+						publish(i++);
+					}
+					return null;
+				}
 
-			    @Override
-			    protected void process(List<Integer> chunks) 
-			   {
-			        int aktuellerWert = chunks.get(chunks.size() - 1);
-			        viewWunschlistenLaden.setzeFortschrittText(aktuellerWert, gesamt);
-			    }
+				@Override
+				protected void process(List<Integer> chunks)
+				{
+					int aktuellerWert = chunks.get(chunks.size() - 1);
+					viewWunschlistenLaden.setzeFortschrittText(aktuellerWert, gesamt);
+				}
 
-			    @Override
-			    protected void done()
-			    {
-			        viewWunschlistenLaden.dispose();
-			        viewAlleWunschlisten.setVisible(true);
-			    }
+				@Override
+				protected void done()
+				{
+					viewWunschlistenLaden.dispose();
+					viewAlleWunschlisten.setVisible(true);
+				}
 			};
-			
+
 			worker.execute();
-		}
-		else
+		} else
 		{
 			viewAlleWunschlisten.setVisible(true);
 		}
 	}
-	
+
 	private void configLaden()
 	{
 		try
 		{
 			model.ladeConfig();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.toString(), "Fehler beim Laden der Config", JOptionPane.ERROR_MESSAGE);
 			model.config = new Config();
 		}
 	}
-	
+
 	private void darkMode()
 	{
 		try
 		{
 			UIManager.setLookAndFeel(new FlatDarculaLaf());
-		}
-		catch (UnsupportedLookAndFeelException e)
+		} catch (UnsupportedLookAndFeelException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void viewsVorbereiten()
 	{
 		viewAlleWunschlisten = new ViewAlleWunschlisten();
@@ -129,21 +126,24 @@ public class Controller
 		});
 		viewAlleWunschlisten.btnWunschlisteBearbeitenModel.addActionListener(_e -> {
 			Wunschliste w = viewAlleWunschlisten.getSelectedWunschliste();
-			if (w != null) {
+			if (w != null)
+			{
 				viewAlleWunschlisten.setVisible(false);
 				viewWunschlisteBearbeiten.setzeWunschliste(w);
 				viewWunschlisteBearbeiten.setVisible(true);
 			}
 		});
 		viewAlleWunschlisten.btnSpeichernModel.addActionListener(_e -> {
-			try {
+			try
+			{
 				model.speichereConfig();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, e.toString(), "Fehler beim Speichern", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
+
 		viewWunschlisteErstellen = new ViewWunschlisteErstellen();
 		viewWunschlisteErstellen.btnZurueckModel.addActionListener(_e -> {
 			viewWunschlisteErstellen.setVisible(false);
@@ -153,31 +153,29 @@ public class Controller
 			String name = viewWunschlisteErstellen.getWunschlisteName();
 			String description = viewWunschlisteErstellen.getWunschlisteBeschreibung();
 			List<WunschlisteEintrag> items = new ArrayList<WunschlisteEintrag>();
-			
+
 			if (name.length() == 0 || description.length() == 0)
 			{
 				viewWunschlisteErstellen.setStatusText("Name/Beschreibung fehlt!");
 				return;
-			}
-			else
+			} else
 			{
 				viewWunschlisteErstellen.setStatusText("");
 				viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Wird erstellt...", false);
 			}
-			
+
 			try
 			{
 				WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
 				Wunschliste w = model.createWunschliste(wc);
 				viewWunschlisteErstellen.setStatusText("Wunschliste erstellt mit ID " + w.getId());
-			}
-			catch (ApiException | IOException | InterruptedException err)
+			} catch (ApiException | IOException | InterruptedException err)
 			{
 				err.printStackTrace();
-				viewWunschlisteErstellen.setStatusText(err.toString());				
+				viewWunschlisteErstellen.setStatusText(err.toString());
 			}
 		});
-		
+
 		viewWunschlisteBearbeiten = new ViewWunschlisteBearbeiten();
 	}
 }
