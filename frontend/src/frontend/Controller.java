@@ -87,6 +87,10 @@ public class Controller
 			
 			worker.execute();
 		}
+		else
+		{
+			viewAlleWunschlisten.setVisible(true);
+		}
 	}
 	
 	private void configLaden()
