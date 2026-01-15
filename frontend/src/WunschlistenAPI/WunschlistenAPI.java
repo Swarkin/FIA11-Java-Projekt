@@ -1,5 +1,6 @@
 package WunschlistenAPI;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,7 +30,7 @@ public class WunschlistenAPI
 		gson = new Gson();
 	}
 	
-	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException
+	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException, ApiException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
 			.uri(URI.create(url+"/wunschliste/?id="+id)).GET()
@@ -41,7 +42,7 @@ public class WunschlistenAPI
 		return leseAntwort(response, Wunschliste.class);
 	}
 	
-	public Wunschliste createWunschliste(WunschlisteCreate wunschliste) throws IOException, InterruptedException
+	public Wunschliste createWunschliste(WunschlisteCreate wunschliste) throws IOException, InterruptedException, ApiException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
 			.uri(URI.create(url+"/wunschliste/")).POST(BodyPublishers.ofString(gson.toJson(wunschliste)))
@@ -54,7 +55,7 @@ public class WunschlistenAPI
 		return leseAntwort(response, Wunschliste.class);
 	}
 	
-	public void deleteWunschliste(int id) throws IOException, InterruptedException
+	public void deleteWunschliste(int id) throws IOException, InterruptedException, ApiException
 	{
 		HttpRequest request = HttpRequest.newBuilder()
 			.uri(URI.create(url+"/wunschliste/?id="+id)).DELETE()
@@ -65,11 +66,11 @@ public class WunschlistenAPI
 		pruefeFehlercode(response);
 	}
 	
-	private <H> void pruefeFehlercode(HttpResponse<H> response) throws IOException
+	private <H> void pruefeFehlercode(HttpResponse<H> response) throws FileNotFoundException, ApiException
 	{
 		if (response.statusCode() != 200)
 		{
-			throw new IOException("Fehlercode: " + response.statusCode() + "\n" + response.body());
+			throw new ApiException(response.statusCode());
 		}
 	}
 	

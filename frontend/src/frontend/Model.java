@@ -12,6 +12,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
 import WunschlistenAPI.WunschlistenAPI;
 
@@ -30,7 +31,7 @@ public class Model
 		api = new WunschlistenAPI("https://swarkin.dev");
 	}
 	
-	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException
+	public Wunschliste getWunschliste(int id) throws IOException, InterruptedException, ApiException
 	{
 		pruefeId(id);
 		
@@ -46,10 +47,15 @@ public class Model
 		return w;
 	}
 	
-	public Wunschliste createWunschliste(WunschlisteCreate wc) throws IOException, InterruptedException
+	public Wunschliste createWunschliste(WunschlisteCreate wc) throws IOException, InterruptedException, ApiException
 	{
 		Wunschliste w = api.createWunschliste(wc);
-		listen.put(w.getId(), w);
+		
+		if (w != null)
+		{
+			listen.put(w.getId(), w);
+			config.addListenID(w.getId());
+		}
 		
 		return w;
 	}
