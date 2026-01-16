@@ -1,5 +1,6 @@
 package frontend;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class Wunschliste
@@ -40,9 +41,9 @@ public class Wunschliste
 		return description;
 	}
 
-	public Map<Integer, WunschlisteEintrag> getItems()
+	public Collection<WunschlisteEintrag> getItems()
 	{
-		return items;
+		return items.values();
 	}
 
 	@Override

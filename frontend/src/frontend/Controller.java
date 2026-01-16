@@ -82,6 +82,9 @@ public class Controller
 				protected void done()
 				{
 					viewWunschlistenLaden.dispose();
+
+					viewAlleWunschlisten.listWunschlistenModel.removeAllElements();
+					viewAlleWunschlisten.listWunschlistenModel.addAll(model.getLokaleWunschlisten());
 					viewAlleWunschlisten.setVisible(true);
 				}
 			};
@@ -210,5 +213,8 @@ public class Controller
 		});
 
 		viewWunschlisteBearbeiten = new ViewWunschlisteBearbeiten();
+		viewWunschlisteBearbeiten.btnWunschHinzufügenModel.addActionListener(_e -> {
+
+		});
 	}
 }

@@ -1,31 +1,37 @@
 package frontend;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JTextField;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+
+import javax.swing.ButtonModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class ViewWunschlisteBearbeiten extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
-	private Wunschliste wunschliste;
-
 	private JPanel contentPane;
 	private JLabel lblWunschlisteName;
 	private JLabel lblWunschlisteDescription;
 	private JLabel lblWunschname;
-	private JList<Wunschliste> listEintraege;
+	private JList<WunschlisteEintrag> listEintraege;
 	private JButton btnWunschHinzufügen;
 	private JButton btnWunschDelete;
 	private JTextField txtWunschname;
+
+	public DefaultListModel<WunschlisteEintrag> listEintraegeModel;
+	public ButtonModel btnWunschHinzufügenModel;
+	public ButtonModel btnWunschDeleteModel;
+	private JButton btnNewButton;
 
 	public ViewWunschlisteBearbeiten()
 	{
@@ -35,28 +41,36 @@ public class ViewWunschlisteBearbeiten extends JFrame
 
 	public void setzeWunschliste(Wunschliste wunschliste)
 	{
-		this.wunschliste = wunschliste;
-		this.lblWunschlisteName.setText(wunschliste.getName());
-		this.lblWunschlisteDescription.setText(wunschliste.getBeschreibung());
+		lblWunschlisteName.setText(wunschliste.getName());
+		lblWunschlisteDescription.setText(wunschliste.getBeschreibung());
+		listEintraegeModel.removeAllElements();
+		listEintraegeModel.addAll(wunschliste.getItems());
 	}
 
 	public void reset()
 	{
-		wunschliste = null;
+		lblWunschlisteName.setText("");
+		lblWunschlisteDescription.setText("");
+		listEintraegeModel.removeAllElements();
+	}
+
+	public String getWunschErstellenName()
+	{
+		return txtWunschname.getText();
 	}
 
 	private void initialize()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 317, 426);
+		setBounds(100, 100, 400, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 20, 150, 100, 20, 0 };
-		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 10, 150, 20, 10, 31, 10, 31, 20, 0 };
+		gbl_contentPane.columnWidths = new int[] { 20, 150, 150, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 10, 150, 20, 10, 31, 10, 31, 10, 0, 20, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblWunschlisteName = new GridBagConstraints();
 		gbc_lblWunschlisteName.gridwidth = 2;
@@ -106,6 +120,13 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		gbc_btnWunschDelete.gridx = 1;
 		gbc_btnWunschDelete.gridy = 9;
 		contentPane.add(getBtnWunschDelete(), gbc_btnWunschDelete);
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.anchor = GridBagConstraints.EAST;
+		gbc_btnNewButton.gridwidth = 2;
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 1;
+		gbc_btnNewButton.gridy = 11;
+		contentPane.add(getBtnNewButton(), gbc_btnNewButton);
 	}
 
 	private JLabel getLblWunschlisteName()
@@ -124,6 +145,7 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		{
 			btnWunschHinzufügen = new JButton("Wunsch hinzufügen");
 			btnWunschHinzufügen.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnWunschHinzufügenModel = btnWunschHinzufügen.getModel();
 		}
 		return btnWunschHinzufügen;
 	}
@@ -132,7 +154,7 @@ public class ViewWunschlisteBearbeiten extends JFrame
 	{
 		if (lblWunschlisteDescription == null)
 		{
-			lblWunschlisteDescription = new JLabel("description");
+			lblWunschlisteDescription = new JLabel("Beschreibung");
 			lblWunschlisteDescription.setFont(new Font("Arial", Font.PLAIN, 12));
 		}
 		return lblWunschlisteDescription;
@@ -144,15 +166,17 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		{
 			btnWunschDelete = new JButton("Wunsch löschen");
 			btnWunschDelete.setFont(new Font("Arial", Font.PLAIN, 14));
+			btnWunschDeleteModel = btnWunschDelete.getModel();
 		}
 		return btnWunschDelete;
 	}
 
-	private JList<Wunschliste> getListEintraege()
+	private JList<WunschlisteEintrag> getListEintraege()
 	{
 		if (listEintraege == null)
 		{
-			listEintraege = new JList<Wunschliste>();
+			listEintraegeModel = new DefaultListModel<WunschlisteEintrag>();
+			listEintraege = new JList<WunschlisteEintrag>(listEintraegeModel);
 		}
 		return listEintraege;
 	}
@@ -175,5 +199,15 @@ public class ViewWunschlisteBearbeiten extends JFrame
 			lblWunschname.setFont(new Font("Arial", Font.PLAIN, 12));
 		}
 		return lblWunschname;
+	}
+
+	private JButton getBtnNewButton()
+	{
+		if (btnNewButton == null)
+		{
+			btnNewButton = new JButton("Zurück");
+			btnNewButton.setFont(new Font("Arial", Font.PLAIN, 12));
+		}
+		return btnNewButton;
 	}
 }

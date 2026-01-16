@@ -38,13 +38,13 @@ public class ViewAlleWunschlisten extends JFrame
 
 	public Wunschliste getSelectedWunschliste()
 	{
-		return null;
+		return listWunschlisten.getSelectedValue();
 	}
 
 	private void initialize()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 370, 363);
+		setBounds(100, 100, 370, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
