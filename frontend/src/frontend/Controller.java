@@ -163,6 +163,7 @@ public class Controller
 			if (name.length() == 0 || description.length() == 0)
 			{
 				viewWunschlisteErstellen.setStatusText("Name/Beschreibung fehlt!");
+				viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Erneut versuchen", true);
 				return;
 			} else
 			{

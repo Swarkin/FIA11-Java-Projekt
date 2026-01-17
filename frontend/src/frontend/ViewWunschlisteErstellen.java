@@ -25,6 +25,7 @@ public class ViewWunschlisteErstellen extends JFrame
 	private JLabel lblWunschlisteBeschreibung;
 	private JTextArea txtWunschlisteBeschreibung;
 	private JButton btnWunschlisteErstellen;
+	private JLabel lblStatus;
 	private JButton btnZurueck;
 
 	public ButtonModel btnZurueckModel;
@@ -54,9 +55,9 @@ public class ViewWunschlisteErstellen extends JFrame
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] { 20, 235, 20, 0 };
-		gbl_contentPane.rowHeights = new int[] { 20, 23, 20, 0, 0, 10, 0, 0, 20, 23, 10, 23, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 23, 20, 0, 0, 10, 0, 50, 20, 23, 10, 20, 23, 20, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblTitel = new GridBagConstraints();
 		gbc_lblTitel.fill = GridBagConstraints.BOTH;
@@ -95,12 +96,17 @@ public class ViewWunschlisteErstellen extends JFrame
 		gbc_btnWunschlisteErstellen.gridx = 1;
 		gbc_btnWunschlisteErstellen.gridy = 9;
 		contentPane.add(getBtnWunschlisteErstellen(), gbc_btnWunschlisteErstellen);
+		GridBagConstraints gbc_lblStatus = new GridBagConstraints();
+		gbc_lblStatus.insets = new Insets(0, 0, 5, 5);
+		gbc_lblStatus.gridx = 1;
+		gbc_lblStatus.gridy = 10;
+		contentPane.add(getLblStatus(), gbc_lblStatus);
 		GridBagConstraints gbc_btnZurueck = new GridBagConstraints();
 		gbc_btnZurueck.anchor = GridBagConstraints.EAST;
 		gbc_btnZurueck.insets = new Insets(0, 0, 5, 5);
 		gbc_btnZurueck.fill = GridBagConstraints.VERTICAL;
 		gbc_btnZurueck.gridx = 1;
-		gbc_btnZurueck.gridy = 11;
+		gbc_btnZurueck.gridy = 12;
 		contentPane.add(getBtnZurueck(), gbc_btnZurueck);
 	}
 
@@ -196,5 +202,12 @@ public class ViewWunschlisteErstellen extends JFrame
 			btnZurueckModel = btnZurueck.getModel();
 		}
 		return btnZurueck;
+	}
+	private JLabel getLblStatus() {
+		if (lblStatus == null) {
+			lblStatus = new JLabel("");
+			lblStatus.setFont(new Font("Arial", Font.PLAIN, 12));
+		}
+		return lblStatus;
 	}
 }
