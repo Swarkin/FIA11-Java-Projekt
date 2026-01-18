@@ -68,6 +68,21 @@ public class Model
 		return w;
 	}
 
+	public void deleteWunschliste(int id) throws IOException, InterruptedException, ApiException
+	{
+		api.deleteWunschliste(id);
+
+		if (listen.remove(id) == null)
+		{
+			throw new IOException("Wunschliste konnte nicht lokal entfernt werden");
+		}
+
+		if (!config.removeListenID(id))
+		{
+			throw new IOException("Wunschlisten-ID konnte nicht lokal entfernt werden");
+		}
+	}
+
 	public WunschlisteEintrag createWunschlisteEintrag(WunschlisteCreateEintrag wec) throws IOException, InterruptedException, ApiException
 	{
 		CreateWunschlisteEintragResponse response = api.createWunschlisteEintrag(wec);

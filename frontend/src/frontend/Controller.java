@@ -143,6 +143,43 @@ public class Controller
 				viewWunschlisteBearbeiten.setVisible(true);
 			}
 		});
+		viewAlleWunschlisten.btnWunschlisteLöschenModel.addActionListener(_e -> {
+			Wunschliste w = viewAlleWunschlisten.getSelectedWunschliste();
+			if (w != null)
+			{
+				int input = JOptionPane.showConfirmDialog(null, "Löschen der Wunschliste bestätigen?", "Wunschliste löschen", JOptionPane.CANCEL_OPTION);
+				if (input == JOptionPane.YES_OPTION)
+				{
+					SwingWorker<Void, Void> worker = new SwingWorker<>()
+					{
+						@Override
+						protected Void doInBackground() throws Exception
+						{
+							model.deleteWunschliste(w.getId());
+							viewAlleWunschlisten.aktualisiereWunschlisten(model.getLokaleWunschlisten());
+							return null;
+						}
+
+						@Override
+						protected void done()
+						{
+							try
+							{
+								get();
+								JOptionPane.showMessageDialog(null, "Wunschliste gelöscht.", "Wunschliste löschen", JOptionPane.INFORMATION_MESSAGE);
+							} catch (InterruptedException | ExecutionException e)
+							{
+								e.printStackTrace();
+								JOptionPane.showMessageDialog(null, "Wunschliste konnte nicht gelöscht werden:\n" + e.toString(), "Wunschliste löschen",
+									JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					};
+
+					worker.execute();
+				}
+			}
+		});
 		viewAlleWunschlisten.btnSpeichernModel.addActionListener(_e -> {
 			try
 			{
@@ -178,13 +215,12 @@ public class Controller
 
 			WunschlisteCreate wc = new WunschlisteCreate(name, description, items);
 
-			SwingWorker<Void, Wunschliste> worker = new SwingWorker<>()
+			SwingWorker<Void, Void> worker = new SwingWorker<>()
 			{
 				@Override
 				protected Void doInBackground() throws Exception
 				{
-					Wunschliste w = model.createWunschliste(wc);
-					publish(w);
+					model.createWunschliste(wc);
 					return null;
 				}
 

@@ -24,11 +24,13 @@ public class ViewAlleWunschlisten extends JFrame
 	private JList<Wunschliste> listWunschlisten;
 	private JButton btnWunschlisteErstellen;
 	private JButton btnWunschlisteBearbeiten;
+	private JButton btnWunschlisteLöschen;
 	private JButton btnSpeichern;
 
 	public DefaultListModel<Wunschliste> listWunschlistenModel;
 	public ButtonModel btnWunschlisteErstellenModel;
 	public ButtonModel btnWunschlisteBearbeitenModel;
+	public ButtonModel btnWunschlisteLöschenModel;
 	public ButtonModel btnSpeichernModel;
 
 	public ViewAlleWunschlisten()
@@ -57,9 +59,9 @@ public class ViewAlleWunschlisten extends JFrame
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] { 20, 150, 20, 0 };
-		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 0, 20, 0, 0, 20, 0, 20, 0 };
+		gbl_contentPane.rowHeights = new int[] { 20, 12, 20, 0, 20, 0, 0, 0, 20, 0, 20, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblWunschlisten = new GridBagConstraints();
 		gbc_lblWunschlisten.anchor = GridBagConstraints.WEST;
@@ -86,11 +88,17 @@ public class ViewAlleWunschlisten extends JFrame
 		gbc_btnWunschlisteBearbeiten.gridx = 1;
 		gbc_btnWunschlisteBearbeiten.gridy = 6;
 		contentPane.add(getBtnWunschlisteBearbeiten(), gbc_btnWunschlisteBearbeiten);
+		GridBagConstraints gbc_btnWunschlisteLöschen = new GridBagConstraints();
+		gbc_btnWunschlisteLöschen.fill = GridBagConstraints.BOTH;
+		gbc_btnWunschlisteLöschen.insets = new Insets(0, 0, 5, 5);
+		gbc_btnWunschlisteLöschen.gridx = 1;
+		gbc_btnWunschlisteLöschen.gridy = 7;
+		contentPane.add(getBtnWunschlisteLöschen(), gbc_btnWunschlisteLöschen);
 		GridBagConstraints gbc_btnSpeichern = new GridBagConstraints();
 		gbc_btnSpeichern.anchor = GridBagConstraints.EAST;
 		gbc_btnSpeichern.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSpeichern.gridx = 1;
-		gbc_btnSpeichern.gridy = 8;
+		gbc_btnSpeichern.gridy = 9;
 		contentPane.add(getBtnSpeichern(), gbc_btnSpeichern);
 	}
 
@@ -145,5 +153,16 @@ public class ViewAlleWunschlisten extends JFrame
 			btnSpeichernModel = btnSpeichern.getModel();
 		}
 		return btnSpeichern;
+	}
+
+	private JButton getBtnWunschlisteLöschen()
+	{
+		if (btnWunschlisteLöschen == null)
+		{
+			btnWunschlisteLöschen = new JButton("Löschen");
+			btnWunschlisteLöschen.setFont(new Font("Arial", Font.PLAIN, 12));
+			btnWunschlisteLöschenModel = btnWunschlisteLöschen.getModel();
+		}
+		return btnWunschlisteLöschen;
 	}
 }
