@@ -16,6 +16,7 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
 import WunschlistenAPI.WunschlisteCreateEintrag;
+import WunschlistenAPI.WunschlisteDeleteEintrag;
 import WunschlistenAPI.WunschlisteEintragCreate;
 
 public class Controller
@@ -229,7 +230,6 @@ public class Controller
 			if (wunsch.isEmpty())
 			{
 				viewWunschlisteBearbeiten.setStatusText("Name/Beschreibung fehlt!");
-				viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Erneut versuchen", true);
 				return;
 			} else
 			{
@@ -237,38 +237,81 @@ public class Controller
 				viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Wird erstellt...", false);
 			}
 
-			if (!wunsch.isEmpty())
+			WunschlisteCreateEintrag wec = new WunschlisteCreateEintrag(bearbeitendeWunschliste, new WunschlisteEintragCreate(wunsch));
+
+			SwingWorker<WunschlisteEintrag, Void> worker = new SwingWorker<>()
 			{
-				WunschlisteCreateEintrag wec = new WunschlisteCreateEintrag(bearbeitendeWunschliste, new WunschlisteEintragCreate(wunsch));
-
-				SwingWorker<WunschlisteEintrag, Void> worker = new SwingWorker<>()
+				@Override
+				protected WunschlisteEintrag doInBackground() throws Exception
 				{
-					@Override
-					protected WunschlisteEintrag doInBackground() throws Exception
-					{
-						WunschlisteEintrag we = model.createWunschlisteEintrag(wec);
-						return we;
-					}
+					WunschlisteEintrag we = model.createWunschlisteEintrag(wec);
+					return we;
+				}
 
-					@Override
-					protected void done()
+				@Override
+				protected void done()
+				{
+					try
 					{
-						try
-						{
-							WunschlisteEintrag we = get();
-							viewWunschlisteBearbeiten.setStatusText("Eintrag erstellt!");
-							viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Wunsch hinzufügen", true);
-							viewWunschlisteBearbeiten.listEintraegeModel.addElement(we);
-						} catch (InterruptedException | ExecutionException e)
-						{
-							e.printStackTrace();
-							viewWunschlisteBearbeiten.setStatusText(e.toString());
-						}
+						WunschlisteEintrag we = get();
+						viewWunschlisteBearbeiten.setStatusText("Eintrag erstellt!");
+						viewWunschlisteBearbeiten.listEintraegeModel.addElement(we);
+					} catch (InterruptedException | ExecutionException e)
+					{
+						e.printStackTrace();
+						viewWunschlisteBearbeiten.setStatusText(e.toString());
+					} finally
+					{
+						viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Wunsch hinzufügen", true);
 					}
-				};
+				}
+			};
 
-				worker.execute();
+			worker.execute();
+		});
+		viewWunschlisteBearbeiten.btnWunschDeleteModel.addActionListener(_e -> {
+			WunschlisteEintrag we = viewWunschlisteBearbeiten.getSelectedWunschlisteEintrag();
+
+			if (we == null)
+			{
+				viewWunschlisteBearbeiten.setStatusText("Kein Wunsch ausgewählt");
+				return;
+			} else
+			{
+				viewWunschlisteBearbeiten.setStatusText("");
 			}
+
+			WunschlisteDeleteEintrag wde = new WunschlisteDeleteEintrag(bearbeitendeWunschliste, we.getId());
+
+			SwingWorker<Void, Void> worker = new SwingWorker<>()
+			{
+				@Override
+				protected Void doInBackground() throws Exception
+				{
+					model.deleteWunschlisteEintrag(wde);
+					return null;
+				}
+
+				@Override
+				protected void done()
+				{
+					try
+					{
+						get();
+						viewWunschlisteBearbeiten.setStatusText("Eintrag entfernt!");
+						viewWunschlisteBearbeiten.listEintraegeModel.removeElement(we);
+					} catch (InterruptedException | ExecutionException e)
+					{
+						e.printStackTrace();
+						viewWunschlisteBearbeiten.setStatusText(e.toString());
+					} finally
+					{
+						viewWunschlisteBearbeiten.btnWunschEntfernenKonfiguieren("Wunsch entfernen", true);
+					}
+				}
+			};
+
+			worker.execute();
 		});
 	}
 }

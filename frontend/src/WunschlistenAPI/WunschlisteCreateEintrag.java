@@ -20,10 +20,4 @@ public class WunschlisteCreateEintrag
 	{
 		return eintrag;
 	}
-
-	@Override
-	public String toString()
-	{
-		return eintrag.getName();
-	}
 }

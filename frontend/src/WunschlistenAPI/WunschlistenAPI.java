@@ -97,4 +97,14 @@ public class WunschlistenAPI
 		pruefeFehlercode(response);
 		return leseAntwort(response, CreateWunschlisteEintragResponse.class);
 	}
+
+	public void deleteWunschlisteEintrag(WunschlisteDeleteEintrag wde) throws IOException, InterruptedException, ApiException
+	{
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create(url + "/wunschliste/eintrag?wunschliste_id=" + wde.getWunschlisteId() + "&eintrag_id=" + wde.getEintragId())).DELETE()
+			.timeout(Duration.ofSeconds(10)).build();
+
+		HttpResponse<Void> response = http.send(request, BodyHandlers.discarding());
+		pruefeFehlercode(response);
+	}
 }

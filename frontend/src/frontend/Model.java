@@ -16,6 +16,7 @@ import com.google.gson.JsonSyntaxException;
 import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
 import WunschlistenAPI.WunschlisteCreateEintrag;
+import WunschlistenAPI.WunschlisteDeleteEintrag;
 import WunschlistenAPI.WunschlistenAPI;
 import WunschlistenAPI.WunschlistenAPI.CreateWunschlisteEintragResponse;
 import WunschlistenAPI.WunschlistenAPI.CreateWunschlisteResponse;
@@ -75,6 +76,16 @@ public class Model
 		listen.get(wec.getWunschlisteId()).addItem(we);
 
 		return we;
+	}
+
+	public void deleteWunschlisteEintrag(WunschlisteDeleteEintrag wde) throws IOException, InterruptedException, ApiException
+	{
+		api.deleteWunschlisteEintrag(wde);
+
+		if (!listen.get(wde.getWunschlisteId()).removeItemById(wde.getEintragId()))
+		{
+			throw new IOException("Eintrag konnte nicht lokal aus der Wunschliste entfernt werden");
+		}
 	}
 
 	public void ladeConfig() throws IOException

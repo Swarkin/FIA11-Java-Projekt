@@ -51,6 +51,11 @@ public class Wunschliste
 		items.put(eintrag.getId(), eintrag);
 	}
 
+	public boolean removeItemById(int id)
+	{
+		return items.remove(id) != null;
+	}
+
 	@Override
 	public String toString()
 	{

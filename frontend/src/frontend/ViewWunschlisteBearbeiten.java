@@ -56,6 +56,7 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		txtWunschname.setText("");
 		listEintraegeModel.removeAllElements();
 		btnWunschErstellenKonfiguieren("Wunsch hinzufügen", true);
+		btnWunschEntfernenKonfiguieren("Wunsch entfernen", true);
 	}
 
 	public void setStatusText(String text)
@@ -68,10 +69,21 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		return txtWunschname.getText();
 	}
 
+	public WunschlisteEintrag getSelectedWunschlisteEintrag()
+	{
+		return listEintraege.getSelectedValue();
+	}
+
 	public void btnWunschErstellenKonfiguieren(String text, boolean enabled)
 	{
 		btnWunschHinzufügen.setText(text);
 		btnWunschHinzufügen.setEnabled(enabled);
+	}
+
+	public void btnWunschEntfernenKonfiguieren(String text, boolean enabled)
+	{
+		btnWunschDelete.setText(text);
+		btnWunschDelete.setEnabled(enabled);
 	}
 
 	private void initialize()
@@ -83,9 +95,9 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] { 150, 150, 0 };
-		gbl_contentPane.rowHeights = new int[] { 12, 20, 10, 150, 20, 10, 31, 10, 31, 0, 10, 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 12, 20, 10, 150, 20, 10, 31, 10, 31, 10, 0, 10, 0, 0 };
 		gbl_contentPane.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 		GridBagConstraints gbc_lblWunschlisteName = new GridBagConstraints();
 		gbc_lblWunschlisteName.gridwidth = 2;
@@ -136,15 +148,16 @@ public class ViewWunschlisteBearbeiten extends JFrame
 		gbc_btnWunschDelete.gridy = 8;
 		contentPane.add(getBtnWunschDelete(), gbc_btnWunschDelete);
 		GridBagConstraints gbc_lblStatus = new GridBagConstraints();
-		gbc_lblStatus.insets = new Insets(0, 0, 5, 5);
+		gbc_lblStatus.gridwidth = 2;
+		gbc_lblStatus.insets = new Insets(0, 0, 5, 0);
 		gbc_lblStatus.gridx = 0;
-		gbc_lblStatus.gridy = 9;
+		gbc_lblStatus.gridy = 10;
 		contentPane.add(getLblStatus(), gbc_lblStatus);
 		GridBagConstraints gbc_btnZurueck = new GridBagConstraints();
 		gbc_btnZurueck.anchor = GridBagConstraints.EAST;
 		gbc_btnZurueck.gridwidth = 2;
 		gbc_btnZurueck.gridx = 0;
-		gbc_btnZurueck.gridy = 11;
+		gbc_btnZurueck.gridy = 12;
 		contentPane.add(getBtnZurueck(), gbc_btnZurueck);
 	}
 
@@ -183,7 +196,7 @@ public class ViewWunschlisteBearbeiten extends JFrame
 	{
 		if (btnWunschDelete == null)
 		{
-			btnWunschDelete = new JButton("Wunsch löschen");
+			btnWunschDelete = new JButton("Wunsch entfernen");
 			btnWunschDelete.setFont(new Font("Arial", Font.PLAIN, 14));
 			btnWunschDeleteModel = btnWunschDelete.getModel();
 		}

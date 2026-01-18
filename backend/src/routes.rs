@@ -162,7 +162,7 @@ pub struct RemoveWunschlisteEintrag {
 
 pub async fn remove_wunschliste_eintrag(
 	State(state): State<AppState>,
-	Json(data): Json<RemoveWunschlisteEintrag>
+	Query(data): Query<RemoveWunschlisteEintrag>
 ) -> Result<(), StatusCode> {
 	let mut app_state = state.write().await;
 
