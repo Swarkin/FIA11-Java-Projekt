@@ -35,7 +35,9 @@ public class WunschlistenAPI
 
 		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
 		pruefeFehlercode(response);
-		return leseAntwort(response, Wunschliste.class);
+
+		WunschlisteCreateWithIDs w = leseAntwort(response, WunschlisteCreateWithIDs.class);
+		return new Wunschliste(id, w.getName(), w.getBeschreibung(), w.getItems());
 	}
 
 	// Wird benötigt, um die Serverantwort mit GSON zu lesen
