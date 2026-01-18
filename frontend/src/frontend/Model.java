@@ -15,7 +15,10 @@ import com.google.gson.JsonSyntaxException;
 
 import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
+import WunschlistenAPI.WunschlisteCreateEintrag;
 import WunschlistenAPI.WunschlistenAPI;
+import WunschlistenAPI.WunschlistenAPI.CreateWunschlisteEintragResponse;
+import WunschlistenAPI.WunschlistenAPI.CreateWunschlisteResponse;
 
 public class Model
 {
@@ -55,15 +58,23 @@ public class Model
 
 	public Wunschliste createWunschliste(WunschlisteCreate wc) throws IOException, InterruptedException, ApiException
 	{
-		Wunschliste w = api.createWunschliste(wc);
+		CreateWunschlisteResponse response = api.createWunschliste(wc);
+		Wunschliste w = new Wunschliste(response.id, response.liste.getName(), response.liste.getBeschreibung(), response.liste.getItems());
 
-		if (w != null)
-		{
-			listen.put(w.getId(), w);
-			config.addListenID(w.getId());
-		}
+		listen.put(w.getId(), w);
+		config.addListenID(w.getId());
 
 		return w;
+	}
+
+	public WunschlisteEintrag createWunschlisteEintrag(WunschlisteCreateEintrag wec) throws IOException, InterruptedException, ApiException
+	{
+		CreateWunschlisteEintragResponse response = api.createWunschlisteEintrag(wec);
+		WunschlisteEintrag we = new WunschlisteEintrag(response.id, wec.getEintrag().getName());
+
+		listen.get(wec.getWunschlisteId()).addItem(we);
+
+		return we;
 	}
 
 	public void ladeConfig() throws IOException

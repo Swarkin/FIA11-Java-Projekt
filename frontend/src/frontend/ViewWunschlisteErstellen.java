@@ -203,8 +203,11 @@ public class ViewWunschlisteErstellen extends JFrame
 		}
 		return btnZurueck;
 	}
-	private JLabel getLblStatus() {
-		if (lblStatus == null) {
+
+	private JLabel getLblStatus()
+	{
+		if (lblStatus == null)
+		{
 			lblStatus = new JLabel("");
 			lblStatus.setFont(new Font("Arial", Font.PLAIN, 12));
 		}

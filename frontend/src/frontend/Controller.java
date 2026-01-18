@@ -15,6 +15,8 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 
 import WunschlistenAPI.ApiException;
 import WunschlistenAPI.WunschlisteCreate;
+import WunschlistenAPI.WunschlisteCreateEintrag;
+import WunschlistenAPI.WunschlisteEintragCreate;
 
 public class Controller
 {
@@ -23,6 +25,8 @@ public class Controller
 	private ViewAlleWunschlisten viewAlleWunschlisten;
 	private ViewWunschlisteErstellen viewWunschlisteErstellen;
 	private ViewWunschlisteBearbeiten viewWunschlisteBearbeiten;
+
+	private int bearbeitendeWunschliste = -1;
 
 	public Controller()
 	{
@@ -83,8 +87,7 @@ public class Controller
 				{
 					viewWunschlistenLaden.dispose();
 
-					viewAlleWunschlisten.listWunschlistenModel.removeAllElements();
-					viewAlleWunschlisten.listWunschlistenModel.addAll(model.getLokaleWunschlisten());
+					viewAlleWunschlisten.aktualisiereWunschlisten(model.getLokaleWunschlisten());
 					viewAlleWunschlisten.setVisible(true);
 				}
 			};
@@ -133,6 +136,8 @@ public class Controller
 			if (w != null)
 			{
 				viewAlleWunschlisten.setVisible(false);
+				bearbeitendeWunschliste = w.getId();
+				viewWunschlisteBearbeiten.reset();
 				viewWunschlisteBearbeiten.setzeWunschliste(w);
 				viewWunschlisteBearbeiten.setVisible(true);
 			}
@@ -151,8 +156,7 @@ public class Controller
 		viewWunschlisteErstellen = new ViewWunschlisteErstellen();
 		viewWunschlisteErstellen.btnZurueckModel.addActionListener(_e -> {
 			viewWunschlisteErstellen.setVisible(false);
-			viewAlleWunschlisten.listWunschlistenModel.removeAllElements();
-			viewAlleWunschlisten.listWunschlistenModel.addAll(model.getLokaleWunschlisten());
+			viewAlleWunschlisten.aktualisiereWunschlisten(model.getLokaleWunschlisten());
 			viewAlleWunschlisten.setVisible(true);
 		});
 		viewWunschlisteErstellen.btnErstellenModel.addActionListener(_e -> {
@@ -160,7 +164,7 @@ public class Controller
 			String description = viewWunschlisteErstellen.getWunschlisteBeschreibung();
 			List<WunschlisteEintrag> items = new ArrayList<WunschlisteEintrag>();
 
-			if (name.length() == 0 || description.length() == 0)
+			if (name.isEmpty() || description.isEmpty())
 			{
 				viewWunschlisteErstellen.setStatusText("Name/Beschreibung fehlt!");
 				viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Erneut versuchen", true);
@@ -189,7 +193,7 @@ public class Controller
 					try
 					{
 						get();
-						viewWunschlisteErstellen.setStatusText("Wunschliste erstellt!");
+						viewWunschlisteErstellen.btnWunschlisteErstellenKonfiguieren("Wunschliste erstellt!", false);
 					} catch (InterruptedException e)
 					{
 						e.printStackTrace();
@@ -214,8 +218,57 @@ public class Controller
 		});
 
 		viewWunschlisteBearbeiten = new ViewWunschlisteBearbeiten();
+		viewWunschlisteBearbeiten.btnZurueckModel.addActionListener(_e -> {
+			viewWunschlisteBearbeiten.setVisible(false);
+			bearbeitendeWunschliste = -1;
+			viewAlleWunschlisten.setVisible(true);
+		});
 		viewWunschlisteBearbeiten.btnWunschHinzufügenModel.addActionListener(_e -> {
+			String wunsch = viewWunschlisteBearbeiten.getWunschErstellenName();
 
+			if (wunsch.isEmpty())
+			{
+				viewWunschlisteBearbeiten.setStatusText("Name/Beschreibung fehlt!");
+				viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Erneut versuchen", true);
+				return;
+			} else
+			{
+				viewWunschlisteBearbeiten.setStatusText("");
+				viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Wird erstellt...", false);
+			}
+
+			if (!wunsch.isEmpty())
+			{
+				WunschlisteCreateEintrag wec = new WunschlisteCreateEintrag(bearbeitendeWunschliste, new WunschlisteEintragCreate(wunsch));
+
+				SwingWorker<WunschlisteEintrag, Void> worker = new SwingWorker<>()
+				{
+					@Override
+					protected WunschlisteEintrag doInBackground() throws Exception
+					{
+						WunschlisteEintrag we = model.createWunschlisteEintrag(wec);
+						return we;
+					}
+
+					@Override
+					protected void done()
+					{
+						try
+						{
+							WunschlisteEintrag we = get();
+							viewWunschlisteBearbeiten.setStatusText("Eintrag erstellt!");
+							viewWunschlisteBearbeiten.btnWunschErstellenKonfiguieren("Wunsch hinzufügen", true);
+							viewWunschlisteBearbeiten.listEintraegeModel.addElement(we);
+						} catch (InterruptedException | ExecutionException e)
+						{
+							e.printStackTrace();
+							viewWunschlisteBearbeiten.setStatusText(e.toString());
+						}
+					}
+				};
+
+				worker.execute();
+			}
 		});
 	}
 }

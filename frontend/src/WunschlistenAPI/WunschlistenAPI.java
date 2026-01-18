@@ -17,6 +17,7 @@ import frontend.Wunschliste;
 public class WunschlistenAPI
 {
 	private String url;
+
 	private HttpClient http;
 	private Gson gson;
 
@@ -37,20 +38,26 @@ public class WunschlistenAPI
 		return leseAntwort(response, Wunschliste.class);
 	}
 
-	public Wunschliste createWunschliste(WunschlisteCreate wunschliste) throws IOException, InterruptedException, ApiException
+	// Wird benötigt, um die Serverantwort mit GSON zu lesen
+	public class CreateWunschlisteResponse
 	{
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + "/wunschliste/")).POST(BodyPublishers.ofString(gson.toJson(wunschliste)))
-				.header("content-type", "application/json").timeout(Duration.ofSeconds(10)).build();
+		public int id;
+		public WunschlisteCreateWithIDs liste;
+	}
+
+	public CreateWunschlisteResponse createWunschliste(WunschlisteCreate w) throws IOException, InterruptedException, ApiException
+	{
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + "/wunschliste/")).POST(BodyPublishers.ofString(gson.toJson(w)))
+			.header("content-type", "application/json").timeout(Duration.ofSeconds(10)).build();
 
 		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
 		pruefeFehlercode(response);
-		return leseAntwort(response, Wunschliste.class);
+		return leseAntwort(response, CreateWunschlisteResponse.class);
 	}
 
 	public void deleteWunschliste(int id) throws IOException, InterruptedException, ApiException
 	{
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + "/wunschliste/?id=" + id)).DELETE().timeout(Duration.ofSeconds(10))
-				.build();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + "/wunschliste/?id=" + id)).DELETE().timeout(Duration.ofSeconds(10)).build();
 
 		HttpResponse<Void> response = http.send(request, BodyHandlers.discarding());
 		pruefeFehlercode(response);
@@ -64,8 +71,30 @@ public class WunschlistenAPI
 		}
 	}
 
-	private <T> T leseAntwort(HttpResponse<String> response, Class<T> klasse)
+	private <T> T leseAntwort(HttpResponse<String> response, Class<T> klasse) throws IOException
 	{
-		return gson.fromJson(response.body(), klasse);
+		T ergebnis = gson.fromJson(response.body(), klasse);
+		if (ergebnis == null)
+		{
+			throw new IOException("Json konnte nicht gelesen werden");
+		}
+
+		return ergebnis;
+	}
+
+	// Wird benötigt, um die Serverantwort mit GSON zu lesen
+	public class CreateWunschlisteEintragResponse
+	{
+		public int id;
+	}
+
+	public CreateWunschlisteEintragResponse createWunschlisteEintrag(WunschlisteCreateEintrag wec) throws IOException, InterruptedException, ApiException
+	{
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + "/wunschliste/eintrag")).PUT(BodyPublishers.ofString(gson.toJson(wec)))
+			.header("content-type", "application/json").timeout(Duration.ofSeconds(10)).build();
+
+		HttpResponse<String> response = http.send(request, BodyHandlers.ofString());
+		pruefeFehlercode(response);
+		return leseAntwort(response, CreateWunschlisteEintragResponse.class);
 	}
 }

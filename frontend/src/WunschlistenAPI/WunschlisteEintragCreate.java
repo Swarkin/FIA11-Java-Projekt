@@ -1,4 +1,4 @@
-package frontend;
+package WunschlistenAPI;
 
 public class WunschlisteEintragCreate
 {

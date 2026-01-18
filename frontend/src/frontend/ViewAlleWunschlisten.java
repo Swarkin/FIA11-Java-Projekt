@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Collection;
 
 import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
@@ -39,6 +40,12 @@ public class ViewAlleWunschlisten extends JFrame
 	public Wunschliste getSelectedWunschliste()
 	{
 		return listWunschlisten.getSelectedValue();
+	}
+
+	public void aktualisiereWunschlisten(Collection<Wunschliste> wunschlisten)
+	{
+		listWunschlistenModel.removeAllElements();
+		listWunschlistenModel.addAll(wunschlisten);
 	}
 
 	private void initialize()

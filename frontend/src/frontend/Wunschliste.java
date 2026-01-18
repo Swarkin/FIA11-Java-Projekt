@@ -46,6 +46,11 @@ public class Wunschliste
 		return items.values();
 	}
 
+	public void addItem(WunschlisteEintrag eintrag)
+	{
+		items.put(eintrag.getId(), eintrag);
+	}
+
 	@Override
 	public String toString()
 	{
